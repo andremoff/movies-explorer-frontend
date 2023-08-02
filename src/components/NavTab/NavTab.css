@@ -1,0 +1,55 @@
+.navtab {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.navtab__link_singup,
+.navtab__link_singin {
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  text-decoration: none;
+}
+
+.navtab__link_singup {
+  color: #000;
+  text-align: right;
+}
+
+.navtab__link_singin {
+  color: #fff;
+  background: #3456f3;
+  padding: 5px 12px;
+  border-radius: 3px;
+}
+
+.navtab__link_singin:hover {
+  opacity: .8;
+  transition: all .7s linear;
+  cursor: pointer;
+}
+
+.navtab__link_singup:hover {
+  opacity: .8;
+  transition: all .7s linear;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+  .navtab {
+    gap: 30px;
+  }
+
+  .navtab__link_singup,
+  .navtab__link_singin {
+    font-size: 12px;
+  }
+
+  .navtab__link_singin {
+    padding: 8px 20px;
+  }
+}
