@@ -13,7 +13,7 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import { getUser, register, login } from '../../utils/MainApi';
 import ErrorBanner from '../ErrorBanner/ErrorBanner';
 
-// часть с запросами к серверу пока в разработке
+// часть с запросами к серверу в разработке
 function InnerApp() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
