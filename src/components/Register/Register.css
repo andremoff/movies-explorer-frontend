@@ -38,7 +38,7 @@
 .register__text,
 .register__link {
   color: #000;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -73,7 +73,7 @@
 
 .register__error {
   color: #ee3465;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 400;
@@ -98,9 +98,9 @@
   font-weight: 500;
   border: none;
   border-radius: 3px;
-  background: #3456F3;
+  background: #3456f3;
   padding: 15px 0;
-  color: #FFF;
+  color: #fff;
 }
 
 .register__button:hover {
@@ -118,7 +118,7 @@
 }
 
 .register__link {
-  color: #3456F3;
+  color: #3456f3;
   text-decoration: none;
   margin: 0;
   margin-left: 7px;

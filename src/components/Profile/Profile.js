@@ -60,12 +60,12 @@ const Profile = () => {
       <form className="profile__form">
         <div className="profile__info">
           <h2 className="profile__title">Привет, Виталий!</h2>
-          <div className="profile__input_area_name">
+          <div className="profile__input-name">
             <p className="profile__name">Имя</p>
             <input className="profile__input" type="text" placeholder="Введите имя"
               value={name} onChange={(e) => setName(e.target.value)} disabled={!isEditing} required />
           </div>
-          <div className="profile__input_area_email">
+          <div className="profile__input-email">
             <p className="profile__email">E-mail</p>
             <input className="profile__input" type="email" placeholder="Введите Email"
               value={email} onChange={(e) => setEmail(e.target.value)} disabled={!isEditing} required />
@@ -73,13 +73,13 @@ const Profile = () => {
         </div>
         {isEditing ? (
           <div className="profile__btns">
-            <button onClick={handleSaveButtonClick} className="profile__btn_save" type="submit">Сохранить</button>
+            <button onClick={handleSaveButtonClick} className="profile__btn-save" type="submit">Сохранить</button>
           </div>
         ) : (
           <div className="profile__btns">
             {errorMessage && <p className="profile__error">{errorMessage}</p>}
-            <button onClick={handleEditButtonClick} className="profile__btn_edit">Редактировать</button>
-            <button className="profile__btn_escape" type="button" onClick={handleSignOut}>Выйти из аккаунта</button>
+            <button onClick={handleEditButtonClick} className="profile__btn-edit">Редактировать</button>
+            <button className="profile__btn-escape" type="button" onClick={handleSignOut}>Выйти из аккаунта</button>
           </div>
         )}
       </form>

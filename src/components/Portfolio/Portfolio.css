@@ -11,7 +11,7 @@
 .portfolio__title,
 .portfolio__link {
   color: #a0a0a0;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   text-decoration: none;

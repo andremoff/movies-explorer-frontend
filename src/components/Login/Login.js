@@ -48,7 +48,7 @@ const Login = () => {
           </NavLink>
           <h2 className="login__title">Рады видеть!</h2>
           <p className="login__input-title">E-mail</p>
-          <input className={`login__input login__input-email ${emailError && 'login__input_error'}`}
+          <input className={`login__input ${emailError && 'login__input_error'}`}
             type="email"
             placeholder="Введите E-mail"
             value={email}
@@ -56,7 +56,7 @@ const Login = () => {
             required></input>
           <p className="login__error">{emailError}</p>
           <p className="login__input-title">Пароль</p>
-          <input className={`login__input login__input-password ${passwordError && 'login__input_error'}`}
+          <input className={`login__input ${passwordError && 'login__input_error'}`}
             type="password"
             placeholder="Введите пароль"
             value={password}

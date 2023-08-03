@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'; // импортируйте Link
+import { Link } from 'react-router-dom';
 import './ErrorBanner.css';
 
 const ErrorBanner = () => {

@@ -7,8 +7,8 @@ const NavTab = () => {
 
   return (
     <nav className="navtab" aria-label="Авторизация">
-      <Link to="/signup" className={`navtab__link_singup ${matchSignup ? 'navtab__link_signup_active' : ''}`}>Регистрация</Link>
-      <Link to="/signin" className={`navtab__link_singin ${matchSignin ? 'navtab__link_signin_active' : ''}`}>Войти</Link>
+      <Link to="/signup" className={`navtab__link-signup ${matchSignup ? 'navtab__link-signup_active' : ''}`}>Регистрация</Link>
+      <Link to="/signin" className={`navtab__link-signin ${matchSignin ? 'navtab__link-signin_active' : ''}`}>Войти</Link>
     </nav>
   );
 }

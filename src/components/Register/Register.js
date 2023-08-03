@@ -45,7 +45,7 @@ const Register = ({ onRegister }) => {
   };
 
   return (
-    <div className="register">
+    <section className="register">
       <form className="register__form" onSubmit={handleSubmit}>
         <div className="register__container">
           <NavLink to="/" className="register__logo-link">
@@ -54,7 +54,7 @@ const Register = ({ onRegister }) => {
           <h2 className="register__title">Добро пожаловать!</h2>
           <p className="register__input-title">Имя</p>
           <input
-            className={`register__input register__input-name ${nameError && 'register__input_error'}`}
+            className={`register__input ${nameError && 'register__input_error'}`}
             type="text"
             placeholder="Введите имя"
             value={name}
@@ -64,7 +64,7 @@ const Register = ({ onRegister }) => {
           <p className="register__error">{nameError}</p>
           <p className="register__input-title">E-mail</p>
           <input
-            className={`register__input register__input-email ${emailError && 'register__input_error'}`}
+            className={`register__input ${emailError && 'register__input_error'}`}
             type="email"
             placeholder="Введите E-mail"
             value={email}
@@ -74,7 +74,7 @@ const Register = ({ onRegister }) => {
           <p className="register__error">{emailError}</p>
           <p className="register__input-title">Пароль</p>
           <input
-            className={`register__input register__input-password ${passwordError && 'register__input_error'}`}
+            className={`register__input ${passwordError && 'register__input_error'}`}
             type="password" placeholder="Введите пароль"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -99,7 +99,7 @@ const Register = ({ onRegister }) => {
           </p>
         </div>
       </form>
-    </div>
+    </section>
   );
 };
 
