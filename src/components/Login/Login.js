@@ -1,41 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Login.css';
 import loginLogo from '../../images/header-logo.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { login } from '../../utils/MainApi';
-import { handleError } from '../../utils/handleError';
+import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-const Login = () => {
+const Login = ({ openPopup, closePopup }) => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [tokenError, setTokenError] = useState('');
+  const {
+    values,
+    handleChange,
+    errors,
+    isValid,
+    handleServerError
+  } = useFormWithValidation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
-      navigate('/');
+      await login(values.email, values.password);
+      openPopup("Вход выполнен успешно");
+      setTimeout(() => {
+        closePopup();
+      }, 2000);
+        navigate('/');
     } catch (err) {
-      const { fieldName, errorMessage } = handleError(err);
-
-      switch (fieldName) {
-        case 'email':
-          setEmailError(errorMessage);
-          break;
-        case 'password':
-          setPasswordError(errorMessage);
-          break;
-        case 'token':
-          setTokenError(errorMessage);
-          break;
-        default:
-          setEmailError('');
-          setPasswordError('');
-          setTokenError('');
-      }
+      handleServerError(err.message, "registration");
+      openPopup("Что-то пошло не так");
     }
   };
 
@@ -48,33 +39,37 @@ const Login = () => {
           </NavLink>
           <h2 className="login__title">Рады видеть!</h2>
           <p className="login__input-title">E-mail</p>
-          <input className={`login__input login__input-email ${emailError && 'login__input_error'}`}
+          <input
+            name="email"
+            className={`login__input ${errors.email && 'login__input_error'}`}
             type="email"
             placeholder="Введите E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required></input>
-          <p className="login__error">{emailError}</p>
+            value={values.email || ""}
+            onChange={handleChange}
+            required>
+          </input>
+          <p className="login__error">{errors.email}</p>
+
           <p className="login__input-title">Пароль</p>
-          <input className={`login__input login__input-password ${passwordError && 'login__input_error'}`}
+          <input
+            name="password"
+            className={`login__input ${errors.password && 'login__input_error'}`}
             type="password"
             placeholder="Введите пароль"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required></input>
-          <p className="login__error">{passwordError}</p>
+            value={values.password || ""}
+            onChange={handleChange}
+            required>
+          </input>
+          <p className="login__error">{errors.password}</p>
         </div>
         <div className="login__btn-container">
-          <button className="login__button" type="submit">Войти</button>
+          {errors.token && <p className="login__error login__error_active">{errors.token}</p>}
+          <button className="login__button" type="submit" disabled={!isValid}>Войти</button>
           <p className="login__text">
             Ещё не зарегистрированы?
-            <NavLink className="login__link"
-              to="/signup">
-              Регистрация
-            </NavLink>
+            <NavLink className="login__link" to="/signup">Регистрация</NavLink>
           </p>
         </div>
-        {tokenError && <p className="login__error">{tokenError}</p>}
       </form>
     </div>
   );

@@ -79,7 +79,7 @@
   color: #000;
   text-align: center;
   font-feature-settings: 'clig' off, 'liga' off;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -106,9 +106,9 @@
   transition: width 0.3s ease-in-out;
 }
 
-.navigation__link_profile {
+.navigation__link-profile {
   color: #000;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 16px;
@@ -124,7 +124,7 @@
   text-decoration: none;
 }
 
-.navigation__icon_account {
+.navigation__icon-account {
   margin-right: 7px;
 }
 
@@ -172,48 +172,6 @@
 }
 
 @media screen and (min-width: 768px) {
-  .navigation__menu-content {
-    padding: 22px 22px 90px;
-    width: 60%;
-  }
-
-  .navigation__links-list {
-    padding-top: 105px;
-  }
-
-  .navigation__link-item {
-    padding: 0 0 24px;
-  }
-
-  .navigation__link {
-    padding: 0;
-    font-size: 13px;
-    font-weight: 400;
-  }
-
-  .navigation__link_profile {
-    font-size: 14px;
-    margin: 0;
-    padding: 12px 9px 12px;
-  }
-
-  .navigation__menu-btn {
-    width: 44px;
-    height: 36px;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .navigation__menu-content {
-    width: 50%;
-  }
-}
-
-@media screen and (min-width: 1280px) {
-  .navigation__menu-btn {
-    display: none;
-  }
-
   .navigation__menu {
     visibility: visible;
     position: static;
@@ -225,24 +183,16 @@
     background-color: transparent;
   }
 
-  .navigation__link_hidden {
-    display: none;
-  }
-
   .navigation__menu-content {
+    padding: 22px 22px 90px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     flex-direction: row;
     align-items: center;
-    width: 100%;
     height: auto;
     padding: 0;
     background-color: transparent;
-  }
-
-  .navigation__links-container {
-    flex-direction: row;
-    margin-left: 44px;
   }
 
   .navigation__links-list {
@@ -257,19 +207,43 @@
     padding-bottom: 0;
   }
 
+  .navigation__links-container {
+    flex-direction: row;
+    margin-left: 44px;
+  }
+
   .navigation__link {
+    padding: 0;
+    font-size: 13px;
+    font-weight: 400;
     margin-right: 16px;
   }
 
-  .navigation__link_active {
-    font-weight: 500;
+  .navigation__link_hidden {
+    display: none;
   }
 
-  .navigation__link_profile {
-    margin-left: auto;
+  .navigation__link-profile {
+    font-size: 14px;
+    margin: 0;
+    padding: 12px 9px 12px;
+  }
+
+  .navigation__menu-btn {
+    display: none;
   }
 
   .navigation__menu-close-btn {
     display: none;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .navigation__link_active {
+    font-weight: 500;
+  }
+
+  .navigation__link-profile {
+    margin-left: auto;
   }
 }

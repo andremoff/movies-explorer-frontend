@@ -5,6 +5,14 @@
   background-color: #fafafa;
 }
 
+.search__wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .search__field {
   display: flex;
   flex-direction: row;
@@ -13,7 +21,6 @@
   width: 100%;
   border-radius: 9px;
   background: #fff;
-  box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.08);
   padding: 19px 19px;
 }
 
@@ -23,7 +30,7 @@
   width: 100%;
   color: #a0a0a0;
   font-feature-settings: 'clig' off, 'liga' off;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -32,7 +39,11 @@
   background-color: #fff;
 }
 
-.search__button {
+.search__input:focus {
+  border-bottom: 1px solid #3456f3;
+}
+
+.search__btn {
   background-image: url(../../images/search-form-button.svg);
   background-repeat: no-repeat;
   background-position: center;
@@ -43,7 +54,7 @@
   padding: 0;
 }
 
-.search__button:hover {
+.search__btn:hover {
   opacity: .8;
   transition: all .7s linear;
   cursor: pointer;
@@ -60,7 +71,7 @@
 
 .search__handle-text {
   color: #000;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 11px;
   font-style: normal;
   font-weight: 400;
@@ -69,25 +80,22 @@
   margin-left: 14px;
 }
 
-.search__handle-checkbox {
+.search__checkbox {
   position: relative;
   display: inline-block;
   width: 36px;
   height: 20px;
-}
-
-.search__handle-checkbox {
   cursor: pointer;
 }
 
-.search__handle-checkbox-input {
+.search__tumbler {
   position: absolute;
   opacity: 0;
   width: 100%;
   height: 100%;
 }
 
-.search__handle-checkbox-indicator {
+.search__indicator {
   position: relative;
   display: block;
   width: 100%;
@@ -98,7 +106,7 @@
   transition: background-image .7s;
 }
 
-.search__handle-checkbox-input:checked+.search__handle-checkbox-indicator {
+.search__tumbler:checked+.search__indicator {
   background-image: url(../../images/search-tambler-active.svg);
 }
 
@@ -106,6 +114,12 @@
   .search {
     flex-direction: row;
     padding: 79px 30px 107px;
+  }
+
+  .search__wrapper {
+    flex-direction: row;
+    border-radius: 9px;
+    box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.08);
   }
 
   .search__field {
@@ -132,7 +146,6 @@
     border-bottom: none;
     border-radius: 0 9px 9px 0;
     background-color: #fff;
-    box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.08);
     position: relative;
   }
 
@@ -151,7 +164,7 @@
     font-size: 13px;
   }
 
-  .search__button {
+  .search__btn {
     margin-right: 0;
   }
 }

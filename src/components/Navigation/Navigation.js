@@ -29,11 +29,12 @@ const Navigation = () => {
               </li>
             </ul>
           </div>
-          <Link to="/profile" className="navigation__link_profile">
-            <img src={accountIcon} alt="Иконка профиля" className="navigation__icon_account" />Аккаунт</Link>
+          <Link to="/profile" className="navigation__link-profile">
+            <img src={accountIcon} alt="Иконка профиля" className="navigation__icon-account" />Аккаунт</Link>
         </div>
       </div>
-      <button className={`navigation__menu-btn ${isMenuOpen ? 'navigation__menu-btn_hidden' : ''}`} type="button" onClick={toggleMenu} />
+      <button className={`navigation__menu-btn ${isMenuOpen ? 'navigation__menu-btn_hidden' : ''}`}
+        type="button" onClick={toggleMenu} />
     </nav>
   );
 };

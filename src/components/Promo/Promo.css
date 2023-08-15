@@ -6,13 +6,13 @@
   transition: all 1s linear;
 }
 
-.promo__container_text,
-.promo__container_links {
+.promo__text,
+.promo__links {
   display: flex;
   justify-content: center;
 }
 
-.promo__container_text {
+.promo__text {
   background-image: url(../../images/promo-logo.svg);
   background-repeat: no-repeat;
   background-position: center;
@@ -22,7 +22,7 @@
 .promo__title {
   color: #000;
   text-align: center;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 31px;
   font-weight: 400;
   line-height: 39px;
@@ -31,7 +31,7 @@
   max-width: 730px;
 }
 
-.promo__container_links {
+.promo__links {
   display: grid;
   grid-template-columns: repeat(3, max-content);
   background-color: #f5f5f5;
@@ -42,7 +42,7 @@
 .promo__link {
   color: #000;
   text-align: center;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 11px;
   font-weight: 500;
   line-height: 16px;
@@ -58,7 +58,7 @@
 }
 
 @media screen and (min-width: 768px) {
-  .promo__container_text {
+  .promo__text {
     padding: 326px 0 342px;
     background-size: 320px;
   }
@@ -69,7 +69,7 @@
     letter-spacing: -2px;
   }
 
-  .promo__container_links {
+  .promo__links {
     padding: 24px 0;
     gap: 40px;
   }
@@ -80,12 +80,12 @@
 }
 
 @media screen and (min-width: 1024px) {
-  .promo__container_text {
+  .promo__text {
     padding: 184px 0 224px;
     background-size: 320px;
   }
 
-  .promo__container_links {
+  .promo__links {
     padding: 26px 0;
   }
 }

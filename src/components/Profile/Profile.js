@@ -1,29 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Profile.css';
 import { useNavigate } from 'react-router-dom';
 import { getUser, updateUser, signout } from '../../utils/MainApi';
-// В  разработке
+import { useFormWithValidation } from '../../hooks/useFormWithValidation';
+
 const Profile = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
+  const {
+    values,
+    handleChange,
+    errors,
+    isValid,
+    resetForm,
+    handleServerError
+  } = useFormWithValidation();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
+  const prevUserData = useRef({ name: '', email: '' });
+
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      setName('Виталий');
-      setEmail('pochta@yandex.ru');
-    } else {
-      getUser().then((userData) => {
-        setName(userData.name);
-        setEmail(userData.email);
-      }).catch((error) => {
-        console.log(error);
-        setErrorMessage('При обновлении профиля произошла ошибка.');
-      });
-    }
-  }, []);
+    getUser().then((userData) => {
+      const isUserDataChanged = !prevUserData.current ||
+        prevUserData.current.name !== userData.data.name ||
+        prevUserData.current.email !== userData.data.email;
+
+      if (isUserDataChanged) {
+        setCurrentUser({
+          name: userData.data.name,
+          email: userData.data.email
+        });
+        resetForm({
+          name: userData.data.name,
+          email: userData.data.email
+        }, {}, true);
+
+        prevUserData.current = {
+          name: userData.data.name,
+          email: userData.data.email
+        };
+      }
+
+    }).catch((error) => {
+      console.log(error);
+      handleServerError('updateProfile', 'При обновлении профиля произошла ошибка.');
+    });
+  }, [resetForm, handleServerError]);
 
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
@@ -32,22 +55,35 @@ const Profile = () => {
 
   const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
-    setIsEditing(false);
 
-    updateUser(email, name).then((updatedUserData) => {
-      setName(updatedUserData.name);
-      setEmail(updatedUserData.email);
+    if (!isValid) return;
+
+    updateUser(values.email, values.name).then((updatedUserData) => {
+      setCurrentUser({
+        name: updatedUserData.data.name,
+        email: updatedUserData.data.email
+      });
+      resetForm({
+        name: updatedUserData.data.name,
+        email: updatedUserData.data.email
+      }, {}, true);
+      setIsEditing(false);
     }).catch((error) => {
       console.log(error);
       if (error.message === 'Conflict') {
-        setErrorMessage('Пользователь с таким email уже существует.');
+        handleServerError('email', 'Пользователь с таким email уже существует.');
       } else {
-        setErrorMessage('При обновлении профиля произошла ошибка.');
+        handleServerError('updateProfile', 'При обновлении профиля произошла ошибка.');
       }
     });
   };
 
   const handleSignOut = () => {
+    localStorage.removeItem('savedMovies');
+    localStorage.removeItem('savedSearch');
+    localStorage.removeItem('savedMoviesInputSearch');
+    localStorage.removeItem('savedMoviesTumbler');
+
     signout().then(() => {
       navigate('/signin');
     }).catch((error) => {
@@ -59,27 +95,41 @@ const Profile = () => {
     <section className="profile">
       <form className="profile__form">
         <div className="profile__info">
-          <h2 className="profile__title">Привет, Виталий!</h2>
-          <div className="profile__input_area_name">
+          <h2 className="profile__title">Привет, {currentUser.name}!</h2>
+          <div className="profile__input-name">
             <p className="profile__name">Имя</p>
-            <input className="profile__input" type="text" placeholder="Введите имя"
-              value={name} onChange={(e) => setName(e.target.value)} disabled={!isEditing} required />
+            <input className="profile__input"
+              type="text"
+              placeholder="Введите имя"
+              name="name"
+              value={isEditing ? values.name || '' : currentUser.name}
+              onChange={handleChange}
+              disabled={!isEditing}
+              required />
           </div>
-          <div className="profile__input_area_email">
+          <p className="profile__error">{errors.name}</p>
+          <div className="profile__input-email">
             <p className="profile__email">E-mail</p>
-            <input className="profile__input" type="email" placeholder="Введите Email"
-              value={email} onChange={(e) => setEmail(e.target.value)} disabled={!isEditing} required />
+            <input className="profile__input"
+              type="email"
+              placeholder="Введите Email"
+              name="email"
+              value={isEditing ? values.email || '' : currentUser.email}
+              onChange={handleChange}
+              disabled={!isEditing}
+              required />
           </div>
+          <p className="profile__error">{errors.email}</p>
         </div>
         {isEditing ? (
           <div className="profile__btns">
-            <button onClick={handleSaveButtonClick} className="profile__btn_save" type="submit">Сохранить</button>
+            <button onClick={handleSaveButtonClick} className="profile__btn-save" type="submit" disabled={!isValid}>Сохранить</button>
           </div>
         ) : (
           <div className="profile__btns">
-            {errorMessage && <p className="profile__error">{errorMessage}</p>}
-            <button onClick={handleEditButtonClick} className="profile__btn_edit">Редактировать</button>
-            <button className="profile__btn_escape" type="button" onClick={handleSignOut}>Выйти из аккаунта</button>
+            {errors.updateProfile && <p className="profile__error profile__error_active">{errors.updateProfile}</p>}
+            <button onClick={handleEditButtonClick} className="profile__btn-edit">Редактировать</button>
+            <button className="profile__btn-escape" type="button" onClick={handleSignOut}>Выйти из аккаунта</button>
           </div>
         )}
       </form>

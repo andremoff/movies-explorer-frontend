@@ -21,7 +21,7 @@
 }
 
 .login__btn-container {
-  padding-top: 292px;
+  padding-top: 274px;
 }
 
 .login__logo-link {
@@ -42,7 +42,7 @@
 .login__text,
 .login__link {
   color: #000;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -68,6 +68,7 @@
   border: none;
   border-bottom: 1px solid #e8e8e8;
   outline: none;
+  padding-bottom: 10px;
 }
 
 .login__input:focus {
@@ -81,7 +82,7 @@
 
 .login__error {
   color: #ee3465;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 400;
@@ -92,12 +93,9 @@
   min-height: 18px;
 }
 
-.login__input-email {
-  padding-bottom: 10px;
-}
-
-.login__input-password {
-  padding-bottom: 10px;
+.login__error_active {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .login__button {
@@ -106,7 +104,7 @@
   font-weight: 500;
   border: none;
   border-radius: 3px;
-  background: #3456F3;
+  background: #3456f3;
   padding: 15px 0;
   color: #FFF;
 }
@@ -115,6 +113,11 @@
   opacity: .8;
   cursor: pointer;
   transition: all .7s linear;
+}
+
+.login__button[disabled] {
+  background-color: #f8f8f8;
+  cursor: not-allowed;
 }
 
 .login__text {
@@ -129,7 +132,7 @@
 }
 
 .login__link {
-  color: #3456F3;
+  color: #3456f3;
   text-decoration: none;
   margin-left: 7px;
 }
@@ -155,7 +158,7 @@
   }
 
   .login__btn-container {
-    padding-top: 204px;
+    padding-top: 185px;
   }
 
   .login__button {

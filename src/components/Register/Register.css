@@ -38,7 +38,7 @@
 .register__text,
 .register__link {
   color: #000;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -73,7 +73,7 @@
 
 .register__error {
   color: #ee3465;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 400;
@@ -88,8 +88,13 @@
   border-bottom-color: #3456f3;
 }
 
+.register__error_active {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .register__btn-container {
-  margin-top: 221px;
+  margin-top: 203px;
 }
 
 .register__button {
@@ -98,15 +103,20 @@
   font-weight: 500;
   border: none;
   border-radius: 3px;
-  background: #3456F3;
+  background: #3456f3;
   padding: 15px 0;
-  color: #FFF;
+  color: #fff;
 }
 
 .register__button:hover {
   opacity: .7;
   transition: all 1s linear;
   cursor: pointer;
+}
+
+.register__button[disabled] {
+  background-color: #f8f8f8;
+  cursor: not-allowed;
 }
 
 .register__text,
@@ -118,7 +128,7 @@
 }
 
 .register__link {
-  color: #3456F3;
+  color: #3456f3;
   text-decoration: none;
   margin: 0;
   margin-left: 7px;
@@ -139,7 +149,7 @@
   }
 
   .register__btn-container {
-    margin-top: 134px;
+    margin-top: 115px;
   }
 
   .register__button {
@@ -163,7 +173,7 @@
   }
 
   .register__btn-container {
-    margin-top: 132px;
+    margin-top: 114px;
   }
 
   .register__text {

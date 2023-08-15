@@ -13,7 +13,7 @@ const Header = ({ loggedIn, isLoading }) => {
       <Link to="/" className="header__link">
         <img className="header__logo" src={headerLogo} alt="Логотип Movies Explorer" />
       </Link>
-      {!isLoading && (pathname === '/' ? <NavAuth /> : <Navigation />)}
+      {!isLoading && (loggedIn ? <Navigation /> : <NavAuth />)}
     </header>
   );
 };
