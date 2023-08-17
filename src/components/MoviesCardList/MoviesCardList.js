@@ -16,6 +16,7 @@ const MoviesCardList = ({ movies, savedMoviesToggle, moviesSaved, moviesRemains,
                 movie={movie}
                 savedMoviesToggle={savedMoviesToggle}
                 moviesSaved={moviesSaved}
+                isSaved={moviesSaved.some(m => m.movieId === (movie.id || movie.movieId || movie.data._id))}
               />
             );
           })}

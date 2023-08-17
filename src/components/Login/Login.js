@@ -4,8 +4,10 @@ import loginLogo from '../../images/header-logo.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { login } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
+import useAuth from '../../hooks/useAuth';
 
 const Login = ({ openPopup, closePopup }) => {
+  useAuth(false);
   const navigate = useNavigate();
   const {
     values,
@@ -15,6 +17,7 @@ const Login = ({ openPopup, closePopup }) => {
     handleServerError
   } = useFormWithValidation();
 
+  // Обработчик отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -23,7 +26,7 @@ const Login = ({ openPopup, closePopup }) => {
       setTimeout(() => {
         closePopup();
       }, 2000);
-        navigate('/');
+      navigate('/movies');
     } catch (err) {
       handleServerError(err.message, "registration");
       openPopup("Что-то пошло не так");

@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './SavedMovies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import Preloader from '../Preloader/Preloader';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { getMovies as getSavedMovies, deleteMovie as deleteSavedMovie } from '../../utils/MainApi';
 import { filterMovies } from '../../utils/filterMovies';
+import useAuth from '../../hooks/useAuth';
 
 const SavedMovies = ({ openPopup }) => {
+  useAuth(true);
+
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [errorText, setErrorText] = useState('');
   const [moviesTumbler, setmoviesTumbler] = useState(false);
   const [moviesInputSearch, setmoviesInputSearch] = useState('');
-  const navigate = useNavigate();
 
+  // Запрос сохранённых фильмов с сервера
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -28,47 +30,47 @@ const SavedMovies = ({ openPopup }) => {
     } finally {
       setLoading(false);
     }
-  }, [navigate]);
+  }, [openPopup]);
 
+  // Список фильмов из localStorage
   useEffect(() => {
     const localStorageMovies = localStorage.getItem('savedMovies');
-    const localStorageMoviesTumbler = localStorage.getItem('savedMoviesTumbler');
-    const localStorageMoviesInputSearch = localStorage.getItem('savedMoviesInputSearch');
 
     if (localStorageMovies) {
-      setMovies(JSON.parse(localStorageMovies));
-      setmoviesTumbler(localStorageMoviesTumbler === 'true');
-      setmoviesInputSearch(localStorageMoviesInputSearch || '');
+      const parsedMovies = JSON.parse(localStorageMovies);
+
+      if (Array.isArray(parsedMovies)) {
+        setMovies(parsedMovies);
+      } else {
+        fetchData();
+      }
     } else {
       fetchData();
     }
   }, [fetchData]);
 
+  // Фильтрация фильмов на основе ввода и переключателя
   useEffect(() => {
     const filtered = filterMovies(movies, moviesInputSearch, moviesTumbler);
     setFilteredMovies(filtered);
   }, [movies, moviesInputSearch, moviesTumbler]);
 
+  // Обработчик фильтрации
   const handleGetMovies = (inputSearch = '', tumbler = false) => {
     setmoviesTumbler(tumbler);
     setmoviesInputSearch(inputSearch);
-    localStorage.setItem('savedMoviesTumbler', tumbler.toString());
-    localStorage.setItem('savedMoviesInputSearch', inputSearch);
   };
 
+  // Обработчик удаления фильма
   const handleDeleteMovie = async (movieId) => {
     try {
       await deleteSavedMovie(movieId);
 
-      console.log("Before delete:", movies);
-
       setMovies(prevMovies => {
         const updated = prevMovies.filter((movie) => movie.data._id !== movieId);
-        console.log("After delete:", updated);
 
         setFilteredMovies(filterMovies(updated, moviesInputSearch, moviesTumbler));
 
-        // Здесь обновляем localStorage после успешного удаления фильма
         localStorage.setItem('savedMovies', JSON.stringify(updated));
 
         return updated;
@@ -94,6 +96,7 @@ const SavedMovies = ({ openPopup }) => {
           movies={filteredMovies}
           isSavedMovies={true}
           savedMoviesToggle={handleDeleteMovie}
+          moviesSaved={movies}
         />
       )}
     </section>

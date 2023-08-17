@@ -3,10 +3,15 @@ import './Profile.css';
 import { useNavigate } from 'react-router-dom';
 import { getUser, updateUser, signout } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
+import useAuth from '../../hooks/useAuth';
 
 const Profile = () => {
+  useAuth(true);
+
+  // Навигация для переходов между страницами
   const navigate = useNavigate();
 
+  // Стейты и функции для работы с формой (валидация, значения, ошибки и т.д.)
   const {
     values,
     handleChange,
@@ -20,8 +25,10 @@ const Profile = () => {
   const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
   const prevUserData = useRef({ name: '', email: '' });
 
+  // Получение данных пользователя при монтировании компонента
   useEffect(() => {
     getUser().then((userData) => {
+      // Проверка изменились ли данные пользователя
       const isUserDataChanged = !prevUserData.current ||
         prevUserData.current.name !== userData.data.name ||
         prevUserData.current.email !== userData.data.email;
@@ -48,11 +55,13 @@ const Profile = () => {
     });
   }, [resetForm, handleServerError]);
 
+  // Активация режима редактирования
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
     setIsEditing(true);
   };
 
+  // Сохранение изменений профиля
   const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
 
@@ -78,11 +87,12 @@ const Profile = () => {
     });
   };
 
+  // Выход из профиля и переход на страницу входа
   const handleSignOut = () => {
     localStorage.removeItem('savedMovies');
-    localStorage.removeItem('savedSearch');
-    localStorage.removeItem('savedMoviesInputSearch');
-    localStorage.removeItem('savedMoviesTumbler');
+    localStorage.removeItem('moviesTumbler');
+    localStorage.removeItem('movies');
+    localStorage.removeItem('moviesInputSearch');
 
     signout().then(() => {
       navigate('/signin');

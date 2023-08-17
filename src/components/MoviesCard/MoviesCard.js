@@ -1,55 +1,54 @@
 import './MoviesCard.css';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const MoviesCard = ({ movie, savedMoviesToggle, moviesSaved }) => {
+const MoviesCard = ({ movie, savedMoviesToggle, moviesSaved, isSaved }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [favorite, setFavorite] = useState(false);
-
+  const [favorite, setFavorite] = useState(isSaved);
+  const [isMovieSaved, setIsMovieSaved] = useState(false);
   const actualMovie = movie.data || movie;
+  const isSavedMoviesPath = pathname === '/saved-movies';
+  const movieImage = isSavedMoviesPath ? actualMovie.image : `https://api.nomoreparties.co${actualMovie.image.url}`;
 
+  // Обработчик для добавления/удаления из избранного
   const handleFavoriteToggle = async () => {
     try {
       if (favorite) {
-        const savedFilm = moviesSaved.find((obj) => obj.movieId === actualMovie.id);
-        if (savedFilm) {
-          await savedMoviesToggle({ ...actualMovie, _id: savedFilm._id }, false);
-          setFavorite(false);
+        const savedMovie = moviesSaved.find((obj) => obj.movieId === actualMovie.id);
+        if (savedMovie) {
+          await savedMoviesToggle({ ...actualMovie, _id: savedMovie._id }, favorite);
         }
       } else {
-        await savedMoviesToggle(actualMovie, true);
-        setFavorite(true);
+        await savedMoviesToggle(actualMovie, favorite);
       }
+      setFavorite(!favorite);
     } catch (err) {
       navigate(`/error?message=${encodeURIComponent(err.message || "Ошибка при изменении избранного")}`);
     }
   };
 
+  useEffect(() => {
+    setIsMovieSaved(moviesSaved.some(m => m.movieId === actualMovie.id));
+  }, [moviesSaved, actualMovie.id]);
+
+  // Обработчик для удаления фильма из избранного
   const handleFavoriteDelete = async () => {
     try {
-      await savedMoviesToggle(actualMovie._id, false);
+      if (isSavedMoviesPath) {
+        await savedMoviesToggle(actualMovie._id, false);
+      }
     } catch (err) {
       navigate(`/error?message=${encodeURIComponent(err.message || "Ошибка при удалении фильма из избранного")}`);
     }
   };
 
+  // Конвертация продолжительности фильма в формат "чч мм"
   const durationToHoursAndMinutes = (duration) => {
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;
     return hours ? `${hours}ч ${minutes}м` : `${minutes}м`;
   };
-
-  useEffect(() => {
-    if (moviesSaved && moviesSaved.some(obj => obj.movieId === actualMovie.id)) {
-      setFavorite(true);
-    } else {
-      setFavorite(false);
-    }
-  }, [moviesSaved, actualMovie.id]);
-
-  const isSavedMoviesPath = pathname === '/saved-movies';
-  const movieImage = isSavedMoviesPath ? actualMovie.image : `https://api.nomoreparties.co${actualMovie.image.url}`;
 
   return (
     <li className="moviescard">
@@ -69,7 +68,7 @@ const MoviesCard = ({ movie, savedMoviesToggle, moviesSaved }) => {
           ) : (
             <button
               type="button"
-              className={`moviescard__btn moviescard__btn${favorite ? '_active' : '_inactive'}`}
+              className={`moviescard__btn moviescard__btn${favorite || isMovieSaved ? '_active' : '_inactive'}`}
               onClick={handleFavoriteToggle}
             />
           )}

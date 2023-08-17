@@ -2,28 +2,30 @@ import './SearchForm.css';
 import { useEffect, useState } from 'react';
 
 const SearchForm = ({ handleFilterMovies, moviesTumbler, moviesInputSearch }) => {
+  // Локальное состояние для ввода и переключателя.
   const [inputSearch, setInputSearch] = useState('');
   const [tumbler, setTumbler] = useState(false);
 
+  // Обновляет значение ввода и инициирует фильтрацию фильмов.
   const handleInputChange = (evt) => {
     const value = evt.target.value;
     setInputSearch(value);
-    localStorage.setItem('inputSearch', value);
-    handleFilterMovies(value, moviesTumbler);
   };
 
+  // Переключает состояние переключателя и инициирует фильтрацию фильмов.
   const handleTumblerChange = () => {
     const newTumbler = !tumbler;
     setTumbler(newTumbler);
-    localStorage.setItem('tumbler', newTumbler); 
     handleFilterMovies(inputSearch, newTumbler);
   };
 
+  // Обрабатывает отправку формы.
   const handleSubmit = (evt) => {
     evt.preventDefault();
     handleFilterMovies(inputSearch, moviesTumbler);
   };
 
+  // Синхронизирует локальное состояние с пропсами.
   useEffect(() => {
     setTumbler(moviesTumbler || false);
     setInputSearch(moviesInputSearch || '');

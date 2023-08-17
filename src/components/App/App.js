@@ -1,24 +1,18 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { getUser, register, login } from '../../utils/MainApi';
 import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
 import Main from '../Main/Main';
-import Profile from '../Profile/Profile';
+import Footer from '../Footer/Footer';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
+import Profile from '../Profile/Profile';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
-import { getUser, register, login } from '../../utils/MainApi';
 import ErrorBanner from '../ErrorBanner/ErrorBanner';
-import { withProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 import Popup from '../Popup/Popup';
-
-// Применяем HOC
-const ProtectedProfile = withProtectedRoute(Profile);
-const ProtectedMovies = withProtectedRoute(Movies);
-const ProtectedSavedMovies = withProtectedRoute(SavedMovies);
 
 function InnerApp() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -27,6 +21,7 @@ function InnerApp() {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [popupTitle, setPopupTitle] = useState('');
 
+  // Обработчик регистрации пользователя
   const handleRegister = (email, password, name) => {
     return register(email, password, name)
       .then((res) => {
@@ -35,9 +30,10 @@ function InnerApp() {
           setCurrentUser(res);
           return res;
         }
-      })
+      });
   };
 
+  // Обработчик входа пользователя
   const handleLogin = (email, password) => {
     return login(email, password)
       .then((res) => {
@@ -46,9 +42,10 @@ function InnerApp() {
           setCurrentUser(res);
           return res;
         }
-      })
+      });
   };
 
+  // Получение данных текущего пользователя
   const getUserInfo = () => {
     getUser()
       .then((res) => {
@@ -58,19 +55,22 @@ function InnerApp() {
       .catch((err) => console.log(err));
   };
 
+  // Вызов функции getUserInfo при монтировании компонента
   useEffect(() => {
     getUserInfo();
   }, []);
 
-  function openPopup(textError) {
+  // Открыть модальное окно с ошибкой
+  const openPopup = useCallback((textError) => {
     setPopupTitle(textError);
     setIsOpenPopup(true);
-  }
+  }, []);
 
-  function closePopup() {
+  // Закрыть модальное окно
+  const closePopup = () => {
     setIsOpenPopup(false);
     setPopupTitle('');
-  }
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -83,11 +83,11 @@ function InnerApp() {
           <Routes>
             <Route path='/' element={<Main />} />
             <Route path='/signin' element={<Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
-            <Route path='/signup' element={<Register onRegister={handleRegister} />} />
-            <Route path='/profile' element={<ProtectedProfile loggedIn={loggedIn} user={currentUser} />} />
-            <Route path='/movies' element={<ProtectedMovies loggedIn={loggedIn} openPopup={openPopup} />} />
-            <Route path='/saved-movies' element={<ProtectedSavedMovies loggedIn={loggedIn} openPopup={openPopup} />} />
-            <Route path='/error' element={<ErrorBanner />} /> {/* Добавленный маршрут */}
+            <Route path='/signup' element={<Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
+            <Route path='/profile' element={<Profile loggedIn={loggedIn} user={currentUser} />} />
+            <Route path='/movies' element={<Movies loggedIn={loggedIn} openPopup={openPopup} />} />
+            <Route path='/saved-movies' element={<SavedMovies loggedIn={loggedIn} openPopup={openPopup} />} />
+            <Route path='/error' element={<ErrorBanner />} />
             <Route path='*' element={<ErrorBanner />} />
           </Routes>
         </main>
