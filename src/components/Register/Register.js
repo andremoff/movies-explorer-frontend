@@ -3,10 +3,8 @@ import './Register.css';
 import registerLogo from '../../images/header-logo.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
-import useAuth from '../../hooks/useAuth';
 
 const Register = ({ onRegister, openPopup, closePopup }) => {
-  useAuth(false);
   const navigate = useNavigate();
   const {
     values,

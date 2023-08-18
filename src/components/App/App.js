@@ -74,7 +74,6 @@ function InnerApp() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-
       <div className='App'>
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
           <Header loggedIn={loggedIn} key={loggedIn} /> : ''}

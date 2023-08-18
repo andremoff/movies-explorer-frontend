@@ -21,9 +21,9 @@ const SavedMovies = ({ openPopup }) => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const savedMovies = await getSavedMovies();
-      setMovies(savedMovies);
-      localStorage.setItem('savedMovies', JSON.stringify(savedMovies));
+      const allMovies = await getSavedMovies();
+      console.log("All movies:", allMovies.data);
+      setMovies(allMovies.data);
     } catch (err) {
       setErrorText("Ошибка при получении сохранённых фильмов");
       openPopup("Ошибка при получении сохранённых фильмов");
@@ -32,21 +32,10 @@ const SavedMovies = ({ openPopup }) => {
     }
   }, [openPopup]);
 
-  // Список фильмов из localStorage
+
+  // Загрузка сохраненных фильмов при инициализации компонента
   useEffect(() => {
-    const localStorageMovies = localStorage.getItem('savedMovies');
-
-    if (localStorageMovies) {
-      const parsedMovies = JSON.parse(localStorageMovies);
-
-      if (Array.isArray(parsedMovies)) {
-        setMovies(parsedMovies);
-      } else {
-        fetchData();
-      }
-    } else {
-      fetchData();
-    }
+    fetchData();
   }, [fetchData]);
 
   // Фильтрация фильмов на основе ввода и переключателя
@@ -67,12 +56,8 @@ const SavedMovies = ({ openPopup }) => {
       await deleteSavedMovie(movieId);
 
       setMovies(prevMovies => {
-        const updated = prevMovies.filter((movie) => movie.data._id !== movieId);
-
+        const updated = prevMovies.filter((movie) => movie._id !== movieId);
         setFilteredMovies(filterMovies(updated, moviesInputSearch, moviesTumbler));
-
-        localStorage.setItem('savedMovies', JSON.stringify(updated));
-
         return updated;
       });
 
@@ -93,9 +78,9 @@ const SavedMovies = ({ openPopup }) => {
       {errorText && <div className="savedmovies__text-error">{errorText}</div>}
       {!loading && !errorText && (
         <MoviesCardList
-          movies={filteredMovies}
+          movies={movies}
           isSavedMovies={true}
-          savedMoviesToggle={handleDeleteMovie}
+          toggleFavoriteStatus={handleDeleteMovie}
           moviesSaved={movies}
         />
       )}

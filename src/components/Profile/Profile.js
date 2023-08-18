@@ -93,6 +93,7 @@ const Profile = () => {
     localStorage.removeItem('moviesTumbler');
     localStorage.removeItem('movies');
     localStorage.removeItem('moviesInputSearch');
+    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
     signout().then(() => {
       navigate('/signin');

@@ -2,11 +2,10 @@ import './MoviesCard.css';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const MoviesCard = ({ movie, savedMoviesToggle, moviesSaved, isSaved }) => {
+const MoviesCard = ({ movie, toggleFavoriteStatus, moviesSaved }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [favorite, setFavorite] = useState(isSaved);
-  const [isMovieSaved, setIsMovieSaved] = useState(false);
+  const [favorite, setFavorite] = useState(false);
   const actualMovie = movie.data || movie;
   const isSavedMoviesPath = pathname === '/saved-movies';
   const movieImage = isSavedMoviesPath ? actualMovie.image : `https://api.nomoreparties.co${actualMovie.image.url}`;
@@ -14,34 +13,21 @@ const MoviesCard = ({ movie, savedMoviesToggle, moviesSaved, isSaved }) => {
   // Обработчик для добавления/удаления из избранного
   const handleFavoriteToggle = async () => {
     try {
-      if (favorite) {
-        const savedMovie = moviesSaved.find((obj) => obj.movieId === actualMovie.id);
-        if (savedMovie) {
-          await savedMoviesToggle({ ...actualMovie, _id: savedMovie._id }, favorite);
-        }
+      console.log("Удаляем фильм с ID:", actualMovie._id);
+      if (isSavedMoviesPath) {
+        await toggleFavoriteStatus(actualMovie._id);  // передаем _id фильма
       } else {
-        await savedMoviesToggle(actualMovie, favorite);
+        await toggleFavoriteStatus(actualMovie);
       }
-      setFavorite(!favorite);
     } catch (err) {
       navigate(`/error?message=${encodeURIComponent(err.message || "Ошибка при изменении избранного")}`);
     }
   };
 
   useEffect(() => {
-    setIsMovieSaved(moviesSaved.some(m => m.movieId === actualMovie.id));
-  }, [moviesSaved, actualMovie.id]);
-
-  // Обработчик для удаления фильма из избранного
-  const handleFavoriteDelete = async () => {
-    try {
-      if (isSavedMoviesPath) {
-        await savedMoviesToggle(actualMovie._id, false);
-      }
-    } catch (err) {
-      navigate(`/error?message=${encodeURIComponent(err.message || "Ошибка при удалении фильма из избранного")}`);
-    }
-  };
+    const isFavorite = movie.isFavorited || moviesSaved.some(savedMovie => savedMovie.movieId === actualMovie.id);
+    setFavorite(isFavorite);
+  }, [actualMovie, moviesSaved, movie.isFavorited]);
 
   // Конвертация продолжительности фильма в формат "чч мм"
   const durationToHoursAndMinutes = (duration) => {
@@ -64,11 +50,11 @@ const MoviesCard = ({ movie, savedMoviesToggle, moviesSaved, isSaved }) => {
         <p className="moviescard__title">{actualMovie.nameRU}</p>
         <div className="moviescard__buttons">
           {isSavedMoviesPath ? (
-            <button type="button" className="moviescard__btn moviescard__delete-btn" onClick={handleFavoriteDelete} />
+            <button type="button" className="moviescard__btn moviescard__delete-btn" onClick={handleFavoriteToggle} />
           ) : (
             <button
               type="button"
-              className={`moviescard__btn moviescard__btn${favorite || isMovieSaved ? '_active' : '_inactive'}`}
+              className={`moviescard__btn moviescard__btn${favorite ? '_active' : '_inactive'}`}
               onClick={handleFavoriteToggle}
             />
           )}

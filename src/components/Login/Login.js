@@ -4,10 +4,8 @@ import loginLogo from '../../images/header-logo.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { login } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
-import useAuth from '../../hooks/useAuth';
 
 const Login = ({ openPopup, closePopup }) => {
-  useAuth(false);
   const navigate = useNavigate();
   const {
     values,

@@ -2,7 +2,7 @@ import './MoviesCardList.css';
 import { useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
-const MoviesCardList = ({ movies, savedMoviesToggle, moviesSaved, moviesRemains, handleMore }) => {
+const MoviesCardList = ({ movies, toggleFavoriteStatus, moviesSaved, moviesRemains, handleMore, userInteracted }) => {
   const { pathname } = useLocation();
 
   return (
@@ -14,14 +14,14 @@ const MoviesCardList = ({ movies, savedMoviesToggle, moviesSaved, moviesRemains,
               <MoviesCard
                 key={movie.id || movie.movieId || movie.data._id}
                 movie={movie}
-                savedMoviesToggle={savedMoviesToggle}
+                toggleFavoriteStatus={toggleFavoriteStatus}
                 moviesSaved={moviesSaved}
                 isSaved={moviesSaved.some(m => m.movieId === (movie.id || movie.movieId || movie.data._id))}
               />
             );
           })}
         </ul>
-      ) : (
+      ) : userInteracted &&  (
         <p className="moviescard-list__empty">Ничего не найдено</p>
       )}
 
