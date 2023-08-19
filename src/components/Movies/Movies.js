@@ -9,10 +9,8 @@ import * as mainApi from '../../utils/MainApi';
 import { filterMovies } from '../../utils/filterMovies';
 import { useScreenResize } from '../../hooks/screenHooks';
 import { formatMovieData } from '../../utils/movieDataUtils';
-import useAuth from '../../hooks/useAuth';
 
 const Movies = ({ openPopup }) => {
-  useAuth(true);
 
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);
@@ -110,18 +108,19 @@ const Movies = ({ openPopup }) => {
     }
   };
   //Удаляем фильм из избранного на сервере
-  const deleteMovieFromFavorites = async (movie) => {
-    console.log("Movie object for deletion:", movie); //<---- убрать логи
-    await mainApi.deleteMovie(movie._id);
-    movie.isFavorited = false;
+  const deleteMovieFromFavorites = async (movieId) => {
+    console.log("Movie object for deletion:", movieId); //<---- убрать логи
+    await mainApi.deleteMovie(movieId  || movieId._id);
+    movieId.isFavorited = false;
   };
+
   //Добавляет фильм в избранное на сервере
   const addMovieToFavorites = async (movie) => {
     console.log("Initial movie data:", movie);
     const formattedMovie = formatMovieData(movie);
     console.log("Formatted movie data:", formattedMovie);
     const savedMovie = await mainApi.createMovie(formattedMovie);
-    console.log("Saved movie response:", savedMovie);
+    
     movie.isFavorited = true;
     movie._id = savedMovie._id;
   };

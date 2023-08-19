@@ -13,6 +13,7 @@ import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import ErrorBanner from '../ErrorBanner/ErrorBanner';
 import Popup from '../Popup/Popup';
+import { withProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 
 function InnerApp() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -83,9 +84,9 @@ function InnerApp() {
             <Route path='/' element={<Main />} />
             <Route path='/signin' element={<Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
             <Route path='/signup' element={<Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
-            <Route path='/profile' element={<Profile loggedIn={loggedIn} user={currentUser} />} />
-            <Route path='/movies' element={<Movies loggedIn={loggedIn} openPopup={openPopup} />} />
-            <Route path='/saved-movies' element={<SavedMovies loggedIn={loggedIn} openPopup={openPopup} />} />
+            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, user: currentUser })} />
+            <Route path='/movies' element={withProtectedRoute(Movies) ({ loggedIn, user: currentUser })} />
+            <Route path='/saved-movies' element={withProtectedRoute(SavedMovies) ({ loggedIn, user: currentUser })} />
             <Route path='/error' element={<ErrorBanner />} />
             <Route path='*' element={<ErrorBanner />} />
           </Routes>

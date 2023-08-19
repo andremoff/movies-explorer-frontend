@@ -3,10 +3,8 @@ import './Profile.css';
 import { useNavigate } from 'react-router-dom';
 import { getUser, updateUser, signout } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
-import useAuth from '../../hooks/useAuth';
 
 const Profile = () => {
-  useAuth(true);
 
   // Навигация для переходов между страницами
   const navigate = useNavigate();

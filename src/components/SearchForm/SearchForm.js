@@ -25,7 +25,7 @@ const SearchForm = ({ handleFilterMovies, moviesTumbler, moviesInputSearch, hand
   // Обрабатывает отправку формы.
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    handleFilterMovies(inputSearch, moviesTumbler);
+    handleFilterMovies(inputSearch, tumbler);
   };
 
   // Синхронизирует локальное состояние с пропсами.

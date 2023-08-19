@@ -5,11 +5,8 @@ import Preloader from '../Preloader/Preloader';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { getMovies as getSavedMovies, deleteMovie as deleteSavedMovie } from '../../utils/MainApi';
 import { filterMovies } from '../../utils/filterMovies';
-import useAuth from '../../hooks/useAuth';
 
 const SavedMovies = ({ openPopup }) => {
-  useAuth(true);
-console.log('запрос')
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
@@ -22,7 +19,7 @@ console.log('запрос')
     setLoading(true);
     try {
       const allMovies = await getSavedMovies();
-      console.log("All movies:", allMovies.data);
+      //console.log("All movies:", allMovies.data); <---- ЛОГИ
       setMovies(allMovies.data);
     } catch (err) {
       setErrorText("Ошибка при получении сохранённых фильмов");
@@ -40,14 +37,26 @@ console.log('запрос')
 
   // Фильтрация фильмов на основе ввода и переключателя
   useEffect(() => {
+    /*console.log("Filtering movies with:", { <---- ЛОГИ
+      moviesList: movies,
+      searchTerm: moviesInputSearch,
+      tumblerStatus: moviesTumbler
+    });*/
     const filtered = filterMovies(movies, moviesInputSearch, moviesTumbler);
+    //console.log("Filtered movies:", filtered);
     setFilteredMovies(filtered);
   }, [movies, moviesInputSearch, moviesTumbler]);
 
   // Обработчик фильтрации
   const handleGetMovies = (inputSearch = '', tumbler = false) => {
+    //console.log("Filter parameters:", inputSearch, tumbler); <---- ЛОГИ
     setmoviesTumbler(tumbler);
     setmoviesInputSearch(inputSearch);
+  };
+  // Обработчик переключателя "короткометражек"
+  const handleGetMoviesTumbler = (tumbler) => {
+    //console.log("Tumbler changed:", tumbler); <---- ЛОГИ
+    setmoviesTumbler(tumbler);
   };
 
   // Обработчик удаления фильма
@@ -71,6 +80,7 @@ console.log('запрос')
     <section className="savedmovies">
       <SearchForm
         handleFilterMovies={handleGetMovies}
+        handleGetMoviesTumbler={handleGetMoviesTumbler}
         moviesTumbler={moviesTumbler}
         moviesInputSearch={moviesInputSearch}
       />
