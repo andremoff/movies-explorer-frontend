@@ -3,20 +3,6 @@
   background-color: #fafafa;
 }
 
-.moviescard-list__empty {
-  display: flex;
-  justify-content: center;
-  color: #000;
-  text-align: center;
-  font-family: Inter, Arial, sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  margin: 0;
-  padding: 0;
-}
-
 .moviescard-list__items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, max-content));

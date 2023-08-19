@@ -23,13 +23,13 @@ const Movies = ({ openPopup }) => {
   const [displayedMovies, setDisplayedMovies] = useState([]);
   const [additionalMoviesCount, setAdditionalMoviesCount] = useState(0);
   const [moviesSaved, setMovieSaved] = useState([]);
-  const [userInteracted, setUserInteracted] = useState(false);
   const navigate = useNavigate();
   // Используем хук для отслеживания изменения размера экрана
   useScreenResize(setAdditionalMoviesCount);
 
   // Загрузка фильмов или получение их из localStorage
   useEffect(() => {
+    console.log('первый') //<---- убрать логи
     if (localStorage.getItem('movies')) {
       const cachedMovies = JSON.parse(localStorage.getItem('movies'));
       setAllMovies(cachedMovies);
@@ -51,41 +51,9 @@ const Movies = ({ openPopup }) => {
 
   const getLocalMovieId = (movie) => movie.movieId || movie.id;
 
-  // Сохранение состояния строки поиска и тумблера в localStorage
-  useEffect(() => {
-    localStorage.setItem('moviesInputSearch', moviesInputSearch);
-    localStorage.setItem('moviesTumbler', JSON.stringify(moviesTumbler));
-  }, [moviesInputSearch, moviesTumbler]);
-
-  // Получение данных из localStorage при монтировании компонента
-  useEffect(() => {
-    const localMoviesInputSearch = localStorage.getItem('moviesInputSearch');
-    const localMoviesTumbler = JSON.parse(localStorage.getItem('moviesTumbler'));
-    const localDisplayedMovies = JSON.parse(localStorage.getItem('displayedMovies'));
-
-    if (localMoviesInputSearch) {
-      setMoviesInputSearch(localMoviesInputSearch);
-    }
-
-    if (localMoviesTumbler !== null) {
-      setMoviesTumbler(localMoviesTumbler);
-    }
-
-    if (localDisplayedMovies && localDisplayedMovies.length > 0) {
-      setDisplayedMovies(localDisplayedMovies);
-    }
-
-  }, []);
-
-  // Сохранение отображаемых фильмов в localStorage
-  useEffect(() => {
-    localStorage.setItem('displayedMovies', JSON.stringify(displayedMovies));
-  }, [displayedMovies]);
-
   // Фильтрация фильмов на основе ввода пользователя
   const handleFilterMovies = useCallback((inputSearch, tumbler) => {
     setMoviesInputSearch(inputSearch);
-    setUserInteracted(true);
     const filteredMovies = filterMovies(allMovies, inputSearch, tumbler);
     setDisplayedMovies(filteredMovies.slice(0, additionalMoviesCount * 4));
 
@@ -94,19 +62,42 @@ const Movies = ({ openPopup }) => {
     setMoviesRemains(remains);
   }, [allMovies, additionalMoviesCount]);
 
-  // Фильтрация фильмов при изменении размера экрана, строки поиска или тумблера
-  useEffect(() => {
-    handleFilterMovies(moviesInputSearch, moviesTumbler);
-  }, [additionalMoviesCount, moviesInputSearch, moviesTumbler, handleFilterMovies]);
-
   const handleGetMoviesTumbler = (newTumblerValue) => {
+    console.log('Tumbler changed:', newTumblerValue); //<---- убрать логи
     setMoviesTumbler(newTumblerValue);
+    localStorage.setItem('moviesTumbler', JSON.stringify(newTumblerValue));
   };
+
+  useEffect(() => {
+    console.log('второй'); //<---- убрать логи
+
+    // Получаем значение moviesInputSearch из localStorage
+    const localMoviesInputSearch = localStorage.getItem('moviesInputSearch');
+
+    // Устанавливаем значение moviesInputSearch в state
+    if (localMoviesInputSearch) {
+      setMoviesInputSearch(localMoviesInputSearch);
+      // Фильтруем фильмы на основе moviesInputSearch
+      const filteredMovies = filterMovies(allMovies, localMoviesInputSearch, moviesTumbler);
+      setDisplayedMovies(filteredMovies.slice(0, additionalMoviesCount * 4));
+
+      const remains = filteredMovies.slice(additionalMoviesCount * 4);
+      setMoviesRemains(remains);
+    }
+
+    // Получаем значение moviesTumbler из localStorage
+    const localMoviesTumbler = JSON.parse(localStorage.getItem('moviesTumbler'));
+
+    // Устанавливаем значение moviesTumbler в state
+    if (localMoviesTumbler !== null) {
+      setMoviesTumbler(localMoviesTumbler);
+    }
+  }, []);
 
   // Обработка добавления или удаления фильма из избранного
   const toggleFavoriteStatus = async (movie) => {
     try {
-      console.log("Movie object for toggleFavoriteStatus:", movie);
+      console.log("Movie object for toggleFavoriteStatus:", movie); //<---- убрать логи
       if (movie.isFavorited) {
         await deleteMovieFromFavorites(movie);
       } else {
@@ -119,7 +110,7 @@ const Movies = ({ openPopup }) => {
   };
   //Удаляем фильм из избранного на сервере
   const deleteMovieFromFavorites = async (movie) => {
-    console.log("Movie object for deletion:", movie);
+    console.log("Movie object for deletion:", movie); //<---- убрать логи
     await mainApi.deleteMovie(movie._id);
     movie.isFavorited = false;
   };
@@ -146,11 +137,6 @@ const Movies = ({ openPopup }) => {
     navigate(`/error?message=${encodeURIComponent(err.message || "Ошибка при обработке фильма")}`);
   };
 
-  // Обновление отображаемых фильмов при изменении основного списка
-  useEffect(() => {
-    setDisplayedMovies(movies.slice(0, additionalMoviesCount * 4));
-  }, [movies, additionalMoviesCount]);
-
   // Обработка нажатия "Показать еще"
   const handleMoreButtonClick = () => {
     const newDisplayedMovies = [...displayedMovies, ...moviesRemains.slice(0, additionalMoviesCount)];
@@ -172,15 +158,19 @@ const Movies = ({ openPopup }) => {
         loading ? (
           <Preloader />
         ) : (
-          <MoviesCardList
-            movies={displayedMovies}
-            moviesRemains={moviesRemains}
-            moviesSaved={moviesSaved}
-            handleMore={handleMoreButtonClick}
-            isButtonVisible={moviesRemains.length > 0}
-            toggleFavoriteStatus={toggleFavoriteStatus}
-            userInteracted={userInteracted}
-          />
+          <>
+            {displayedMovies.length === 0 && (
+              <p className="movies__empty">Ничего не найдено</p>
+            )}
+            <MoviesCardList
+              movies={displayedMovies}
+              moviesRemains={moviesRemains}
+              moviesSaved={moviesSaved}
+              handleMore={handleMoreButtonClick}
+              isButtonVisible={moviesRemains.length > 0}
+              toggleFavoriteStatus={toggleFavoriteStatus}
+            />
+          </>
         )
       }
     </section>
