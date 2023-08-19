@@ -29,7 +29,9 @@ const Movies = ({ openPopup }) => {
 
   // Загрузка фильмов или получение их из localStorage
   useEffect(() => {
-    console.log('первый') //<---- убрать логи
+    console.log('загрузка фильмов'); //<---- убрать логи
+
+    // Загрузка фильмов или получение их из localStorage
     if (localStorage.getItem('movies')) {
       const cachedMovies = JSON.parse(localStorage.getItem('movies'));
       setAllMovies(cachedMovies);
@@ -50,7 +52,7 @@ const Movies = ({ openPopup }) => {
   }, [openPopup]);
 
   const getLocalMovieId = (movie) => movie.movieId || movie.id;
-
+  console.log('получение идентификатора фильма'); //<---- убрать логи
   // Фильтрация фильмов на основе ввода пользователя
   const handleFilterMovies = useCallback((inputSearch, tumbler) => {
     setMoviesInputSearch(inputSearch);
@@ -69,30 +71,29 @@ const Movies = ({ openPopup }) => {
   };
 
   useEffect(() => {
-    console.log('второй'); //<---- убрать логи
+    console.log('фильтрация фильмов'); //<---- убрать логи
 
-    // Получаем значение moviesInputSearch из localStorage
-    const localMoviesInputSearch = localStorage.getItem('moviesInputSearch');
+    if (allMovies && allMovies.length > 0) {
+      // Получаем значение moviesInputSearch из localStorage
+      const localMoviesInputSearch = localStorage.getItem('moviesInputSearch');
 
-    // Устанавливаем значение moviesInputSearch в state
-    if (localMoviesInputSearch) {
-      setMoviesInputSearch(localMoviesInputSearch);
-      // Фильтруем фильмы на основе moviesInputSearch
-      const filteredMovies = filterMovies(allMovies, localMoviesInputSearch, moviesTumbler);
-      setDisplayedMovies(filteredMovies.slice(0, additionalMoviesCount * 4));
+      if (localMoviesInputSearch) {
+        setMoviesInputSearch(localMoviesInputSearch);
+        const filteredMovies = filterMovies(allMovies, localMoviesInputSearch, moviesTumbler);
+        setDisplayedMovies(filteredMovies.slice(0, additionalMoviesCount * 4));
 
-      const remains = filteredMovies.slice(additionalMoviesCount * 4);
-      setMoviesRemains(remains);
+        const remains = filteredMovies.slice(additionalMoviesCount * 4);
+        setMoviesRemains(remains);
+      }
+
+      // Получаем значение moviesTumbler из localStorage
+      const localMoviesTumbler = JSON.parse(localStorage.getItem('moviesTumbler'));
+
+      if (localMoviesTumbler !== null) {
+        setMoviesTumbler(localMoviesTumbler);
+      }
     }
-
-    // Получаем значение moviesTumbler из localStorage
-    const localMoviesTumbler = JSON.parse(localStorage.getItem('moviesTumbler'));
-
-    // Устанавливаем значение moviesTumbler в state
-    if (localMoviesTumbler !== null) {
-      setMoviesTumbler(localMoviesTumbler);
-    }
-  }, []);
+  }, [allMovies, moviesTumbler, additionalMoviesCount]);
 
   // Обработка добавления или удаления фильма из избранного
   const toggleFavoriteStatus = async (movie) => {
@@ -116,8 +117,11 @@ const Movies = ({ openPopup }) => {
   };
   //Добавляет фильм в избранное на сервере
   const addMovieToFavorites = async (movie) => {
+    console.log("Initial movie data:", movie);
     const formattedMovie = formatMovieData(movie);
+    console.log("Formatted movie data:", formattedMovie);
     const savedMovie = await mainApi.createMovie(formattedMovie);
+    console.log("Saved movie response:", savedMovie);
     movie.isFavorited = true;
     movie._id = savedMovie._id;
   };
@@ -153,13 +157,14 @@ const Movies = ({ openPopup }) => {
         moviesTumbler={moviesTumbler}
         handleGetMoviesTumbler={handleGetMoviesTumbler}
         moviesInputSearch={moviesInputSearch}
+        saveToLocalStorage={true}
       />
       {
         loading ? (
           <Preloader />
         ) : (
           <>
-            {displayedMovies.length === 0 && (
+            {displayedMovies.length === 0 && moviesInputSearch !== '' && (
               <p className="movies__empty">Ничего не найдено</p>
             )}
             <MoviesCardList

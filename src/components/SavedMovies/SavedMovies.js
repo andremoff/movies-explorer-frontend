@@ -9,7 +9,7 @@ import useAuth from '../../hooks/useAuth';
 
 const SavedMovies = ({ openPopup }) => {
   useAuth(true);
-
+console.log('запрос')
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
@@ -81,7 +81,7 @@ const SavedMovies = ({ openPopup }) => {
           movies={movies}
           isSavedMovies={true}
           toggleFavoriteStatus={handleDeleteMovie}
-          moviesSaved={movies}
+          moviesSaved={filteredMovies}
         />
       )}
     </section>

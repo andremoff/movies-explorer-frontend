@@ -89,7 +89,6 @@ const Profile = () => {
 
   // Выход из профиля и переход на страницу входа
   const handleSignOut = () => {
-    localStorage.removeItem('savedMovies');
     localStorage.removeItem('moviesTumbler');
     localStorage.removeItem('movies');
     localStorage.removeItem('moviesInputSearch');
