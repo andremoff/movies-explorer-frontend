@@ -15,11 +15,15 @@
 * Адаптивная и респонсивная веб-верстка
 * Мобильное меню для улучшения пользовательского опыта на мобильных устройствах.
 
-## Ссылки на проект 
+## Ссылки на проект
 
 * [Figma](https://www.figma.com/file/6FMWkB94wE7KTkcCgUXtnC/light-1?type=design&node-id=1-1534&mode=design)
 * [Фронтенд](https://movies.andremoff.nomoredomains.xyz)
 * [Бэкенд](https://api.movies.andremoff.nomoredomains.xyz)
+
+## Ссылка на реквест
+
+* [Request](https://github.com/andremoff/movies-explorer-frontend/pull/2)
 
 ## Автор
 
