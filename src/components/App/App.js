@@ -27,9 +27,15 @@ function InnerApp() {
     return register(email, password, name)
       .then((res) => {
         if (res) {
-          setLoggedIn(true);
-          setCurrentUser(res);
-          return res;
+          // После успешной регистрации авторизуем пользователя
+          return handleLogin(email, password)
+            .then((loginRes) => {
+              if (loginRes) {
+                setLoggedIn(true);
+                setCurrentUser(loginRes);
+                return loginRes;
+              }
+            });
         }
       });
   };
