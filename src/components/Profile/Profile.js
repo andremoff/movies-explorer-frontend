@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUser, updateUser, signout } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-const Profile = () => {
+const Profile = ({ openPopup }) => {
 
   // Навигация для переходов между страницами
   const navigate = useNavigate();
@@ -79,8 +79,10 @@ const Profile = () => {
       console.log(error);
       if (error.message === 'Conflict') {
         handleServerError('email', 'Пользователь с таким email уже существует.');
+        openPopup('Пользователь с таким email уже существует.');
       } else {
         handleServerError('updateProfile', 'При обновлении профиля произошла ошибка.');
+        openPopup('При обновлении профиля произошла ошибка.');
       }
     });
   };
@@ -93,7 +95,7 @@ const Profile = () => {
     document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
     signout().then(() => {
-      navigate('/signin');
+      navigate('/');
     }).catch((error) => {
       console.log(error);
     });
