@@ -30,7 +30,6 @@ const SearchForm = ({ handleFilterMovies, moviesTumbler, moviesInputSearch, hand
 
   // Синхронизирует локальное состояние с пропсами.
   useEffect(() => {
-    console.log('поиск')
     setTumbler(moviesTumbler || false);
     setInputSearch(moviesInputSearch || '');
   }, [moviesTumbler, moviesInputSearch]);
@@ -45,7 +44,6 @@ const SearchForm = ({ handleFilterMovies, moviesTumbler, moviesInputSearch, hand
             placeholder="Фильм"
             value={inputSearch}
             onChange={handleInputChange}
-            required
           />
           <button className="search__btn" type="submit"></button>
         </div>

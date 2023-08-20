@@ -13,9 +13,8 @@ const MoviesCard = ({ movie, toggleFavoriteStatus, moviesSaved }) => {
   // Обработчик для добавления/удаления из избранного
   const handleFavoriteToggle = async () => {
     try {
-      console.log("Удаляем фильм с ID:", actualMovie._id);
       if (isSavedMoviesPath) {
-        await toggleFavoriteStatus(actualMovie._id);  // передаем _id фильма
+        await toggleFavoriteStatus(actualMovie._id);
       } else {
         await toggleFavoriteStatus(actualMovie);
       }
@@ -28,6 +27,7 @@ const MoviesCard = ({ movie, toggleFavoriteStatus, moviesSaved }) => {
     const isFavorite = movie.isFavorited || moviesSaved.some(savedMovie => savedMovie.movieId === actualMovie.id);
     setFavorite(isFavorite);
   }, [actualMovie, moviesSaved, movie.isFavorited]);
+
 
   // Конвертация продолжительности фильма в формат "чч мм"
   const durationToHoursAndMinutes = (duration) => {

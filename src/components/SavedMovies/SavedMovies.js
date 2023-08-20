@@ -19,8 +19,8 @@ const SavedMovies = ({ openPopup }) => {
     setLoading(true);
     try {
       const allMovies = await getSavedMovies();
-      //console.log("All movies:", allMovies.data); <---- ЛОГИ
       setMovies(allMovies.data);
+      setFilteredMovies(allMovies.data);
     } catch (err) {
       setErrorText("Ошибка при получении сохранённых фильмов");
       openPopup("Ошибка при получении сохранённых фильмов");
@@ -29,34 +29,29 @@ const SavedMovies = ({ openPopup }) => {
     }
   }, [openPopup]);
 
-
   // Загрузка сохраненных фильмов при инициализации компонента
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // Фильтрация фильмов на основе ввода и переключателя
-  useEffect(() => {
-    /*console.log("Filtering movies with:", { <---- ЛОГИ
-      moviesList: movies,
-      searchTerm: moviesInputSearch,
-      tumblerStatus: moviesTumbler
-    });*/
-    const filtered = filterMovies(movies, moviesInputSearch, moviesTumbler);
-    //console.log("Filtered movies:", filtered);
-    setFilteredMovies(filtered);
-  }, [movies, moviesInputSearch, moviesTumbler]);
-
   // Обработчик фильтрации
   const handleGetMovies = (inputSearch = '', tumbler = false) => {
-    //console.log("Filter parameters:", inputSearch, tumbler); <---- ЛОГИ
     setmoviesTumbler(tumbler);
     setmoviesInputSearch(inputSearch);
+
+    if (inputSearch.trim() === '') {
+      const filtered = filterMovies(movies, '', tumbler);
+      setFilteredMovies(filtered);
+    } else {
+      const filtered = filterMovies(movies, inputSearch, tumbler);
+      setFilteredMovies(filtered);
+    }
   };
+
   // Обработчик переключателя "короткометражек"
   const handleGetMoviesTumbler = (tumbler) => {
-    //console.log("Tumbler changed:", tumbler); <---- ЛОГИ
     setmoviesTumbler(tumbler);
+    handleGetMovies(moviesInputSearch, tumbler);
   };
 
   // Обработчик удаления фильма
@@ -88,7 +83,7 @@ const SavedMovies = ({ openPopup }) => {
       {errorText && <div className="savedmovies__text-error">{errorText}</div>}
       {!loading && !errorText && (
         <MoviesCardList
-          movies={movies}
+          movies={filteredMovies}
           isSavedMovies={true}
           toggleFavoriteStatus={handleDeleteMovie}
           moviesSaved={filteredMovies}
