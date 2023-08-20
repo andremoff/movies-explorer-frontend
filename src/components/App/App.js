@@ -13,7 +13,7 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import { getUser, register, login } from '../../utils/MainApi';
 import ErrorBanner from '../ErrorBanner/ErrorBanner';
 
-// часть с запросами к серверу пока в разработке
+// часть с запросами к серверу в разработке
 function InnerApp() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -60,15 +60,17 @@ function InnerApp() {
       <div className='App'>
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
           <Header loggedIn={loggedIn} /> : ''}
-        <Routes>
-          <Route path='/' element={<Main />} />
-          <Route path='/signin' element={<Login onLogin={handleLogin} />} />
-          <Route path='/signup' element={<Register onRegister={handleRegister} />} />
-          <Route path='/profile' element={<Profile loggedIn={loggedIn} user={currentUser} />} />
-          <Route path='/movies' element={<Movies />} />
-          <Route path='/saved-movies' element={<SavedMovies />} />
-          <Route path='*' element={<ErrorBanner />} />
-        </Routes>
+        <main>
+          <Routes>
+            <Route path='/' element={<Main />} />
+            <Route path='/signin' element={<Login onLogin={handleLogin} />} />
+            <Route path='/signup' element={<Register onRegister={handleRegister} />} />
+            <Route path='/profile' element={<Profile loggedIn={loggedIn} user={currentUser} />} />
+            <Route path='/movies' element={<Movies />} />
+            <Route path='/saved-movies' element={<SavedMovies />} />
+            <Route path='*' element={<ErrorBanner />} />
+          </Routes>
+        </main>
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' ? <Footer /> : ''}
       </div>
     </CurrentUserContext.Provider>

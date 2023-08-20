@@ -5,9 +5,9 @@
   gap: 14px;
 }
 
-.navtab__link_singup,
-.navtab__link_singin {
-  font-family: Inter;
+.navtab__link-signup,
+.navtab__link-signin {
+  font-family: Inter, Arial, sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 500;
@@ -15,25 +15,25 @@
   text-decoration: none;
 }
 
-.navtab__link_singup {
+.navtab__link-signup {
   color: #000;
   text-align: right;
 }
 
-.navtab__link_singin {
+.navtab__link-signin {
   color: #fff;
   background: #3456f3;
   padding: 5px 12px;
   border-radius: 3px;
 }
 
-.navtab__link_singin:hover {
+.navtab__link-signin:hover {
   opacity: .8;
   transition: all .7s linear;
   cursor: pointer;
 }
 
-.navtab__link_singup:hover {
+.navtab__link-signup:hover {
   opacity: .8;
   transition: all .7s linear;
   cursor: pointer;
@@ -44,12 +44,12 @@
     gap: 30px;
   }
 
-  .navtab__link_singup,
-  .navtab__link_singin {
+  .navtab__link-signup,
+  .navtab__link-signin {
     font-size: 12px;
   }
 
-  .navtab__link_singin {
+  .navtab__link-signin {
     padding: 8px 20px;
   }
 }

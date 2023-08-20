@@ -34,7 +34,7 @@ const MoviesCardList = () => {
         ))}
       </ul>
       {visibleMovies < movies.length && (
-        <div className="moviescard-list__btn">
+        <div className="moviescard-list__btn-container">
           <button className="moviescard-list__btn-more" onClick={loadMoreMovies}>Ещё</button>
         </div>
       )}

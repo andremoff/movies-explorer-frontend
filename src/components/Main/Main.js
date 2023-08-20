@@ -15,9 +15,9 @@ const Main = () => {
   return (
     <>
       <Promo aboutProjectRef={aboutProjectRef} techRef={techRef} aboutMeRef={aboutMeRef} scrollToRef={scrollToRef} />
-      <div ref={aboutProjectRef}><AboutProject /></div>
-      <div ref={techRef}><Techs /></div>
-      <div ref={aboutMeRef}><AboutMe /></div>
+      <section ref={aboutProjectRef}><AboutProject /></section>
+      <section ref={techRef}><Techs /></section>
+      <section ref={aboutMeRef}><AboutMe /></section>
       <Portfolio />
     </>
   );

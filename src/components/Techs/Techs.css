@@ -7,11 +7,11 @@
 }
 
 .techs__title,
-.techs__about-title,
-.techs__about-discription,
-.techs__list-item {
+.techs__about_title,
+.techs__about_discription,
+.techs__list_item {
   color: #000;
-  font-family: Inter;
+  font-family: Inter, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   text-align: center;
@@ -31,14 +31,14 @@
   flex-direction: column;
 }
 
-.techs__about-title {
+.techs__about_title {
   font-size: 30px;
   padding-top: 60px;
   line-height: normal;
   letter-spacing: -1.2px;
 }
 
-.techs__about-discription {
+.techs__about_discription {
   font-size: 11px;
   line-height: 16px;
   letter-spacing: -.44px;
@@ -56,7 +56,7 @@
   justify-content: center;
 }
 
-.techs__list-item {
+.techs__list_item {
   font-size: 12px;
   line-height: normal;
   letter-spacing: -.48px;
@@ -110,14 +110,14 @@
     justify-content: center;
   }
 
-  .techs__about-title {
+  .techs__about_title {
     font-size: 50px;
     line-height: 58px;
     letter-spacing: -2px;
     padding-top: 80px;
   }
 
-  .techs__about-discription {
+  .techs__about_discription {
     font-size: 12px;
     line-height: 18px;
     letter-spacing: -.48px;
@@ -138,7 +138,7 @@
     padding: 90px 60px;
   }
 
-  .techs__list-item {
+  .techs__list_item {
     width: 90px;
     height: 60px;
     font-size: 14px;
@@ -151,11 +151,11 @@
     padding: 134px 70px 102px;
   }
 
-  .techs__about-title {
+  .techs__about_title {
     padding-top: 89px;
   }
 
-  .techs__about-discription {
+  .techs__about_discription {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: -.56px;
