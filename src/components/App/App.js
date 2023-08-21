@@ -67,15 +67,6 @@ function InnerApp() {
     getUserInfo();
   }, []);
 
-  // Добавляем новую функцию для обновления Header
-  const updateHeader = () => {
-    const header = document.querySelector('.header');
-    if (header) {
-      const clone = header.cloneNode(true);
-      header.parentNode.replaceChild(clone, header);
-    }
-  };
-
   // Открыть модальное окно с ошибкой
   const openPopup = useCallback((textError) => {
     setPopupTitle(textError);
@@ -92,7 +83,7 @@ function InnerApp() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className='App'>
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
-          <Header loggedIn={loggedIn} key={loggedIn} onHeaderUpdate={updateHeader} /> : ''}
+          <Header loggedIn={loggedIn} key={loggedIn} /> : ''}
 
         <main>
           <Routes>
