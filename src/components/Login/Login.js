@@ -2,10 +2,9 @@ import React from 'react';
 import './Login.css';
 import loginLogo from '../../images/header-logo.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { login } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-const Login = ({ openPopup, closePopup }) => {
+const Login = ({ onLogin, openPopup, closePopup }) => {
   const navigate = useNavigate();
   const {
     values,
@@ -19,7 +18,7 @@ const Login = ({ openPopup, closePopup }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(values.email, values.password);
+      await onLogin(values.email, values.password);
       openPopup("Вход выполнен успешно");
       setTimeout(() => {
         closePopup();
