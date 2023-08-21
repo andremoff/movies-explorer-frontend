@@ -22,6 +22,7 @@ function InnerApp() {
   const { pathname } = useLocation();
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [popupTitle, setPopupTitle] = useState('');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   // Обработчик регистрации пользователя
@@ -61,7 +62,10 @@ function InnerApp() {
         setCurrentUser(res);
         setLoggedIn(true);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // Вызов функции getUserInfo при монтировании компонента
@@ -111,9 +115,10 @@ function InnerApp() {
             <Route path='/' element={<Main />} />
             <Route path='/signin' element={<Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
             <Route path='/signup' element={<Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
-            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, user: currentUser, openPopup, closePopup, onSignOut: handleSignOut })} />
-            <Route path='/movies' element={withProtectedRoute(Movies)({ loggedIn, user: currentUser, openPopup })} />
-            <Route path='/saved-movies' element={withProtectedRoute(SavedMovies)({ loggedIn, user: currentUser, openPopup })} />
+            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, loading, user: currentUser, openPopup, closePopup, onSignOut: handleSignOut })} />
+            <Route path='/movies' element={withProtectedRoute(Movies)({ loggedIn, loading, user: currentUser, openPopup })} />
+            <Route path='/saved-movies' element={withProtectedRoute(SavedMovies)({ loggedIn, loading, user: currentUser, openPopup })} />
+
             <Route path='/error' element={<ErrorBanner />} />
             <Route path='*' element={<ErrorBanner />} />
           </Routes>
