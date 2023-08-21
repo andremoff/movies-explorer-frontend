@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUser, updateUser, signout } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-const Profile = ({ openPopup }) => {
+const Profile = ({ openPopup, closePopup }) => {
 
   // Навигация для переходов между страницами
   const navigate = useNavigate();
@@ -47,8 +47,7 @@ const Profile = ({ openPopup }) => {
         };
       }
 
-    }).catch((error) => {
-      console.log(error);
+    }).catch(() => {
       handleServerError('updateProfile', 'При обновлении профиля произошла ошибка.');
     });
   }, [resetForm, handleServerError]);
@@ -75,8 +74,8 @@ const Profile = ({ openPopup }) => {
         email: updatedUserData.data.email
       }, {}, true);
       setIsEditing(false);
+      openPopup('Данные успешно обновлены!');
     }).catch((error) => {
-      console.log(error);
       if (error.message === 'Conflict') {
         handleServerError('email', 'Пользователь с таким email уже существует.');
         openPopup('Пользователь с таким email уже существует.');
@@ -95,9 +94,13 @@ const Profile = ({ openPopup }) => {
     document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
     signout().then(() => {
-      navigate('/');
-    }).catch((error) => {
-      console.log(error);
+      openPopup('Выход из аккаунта выполнен');
+      setTimeout(() => {
+        closePopup();
+        navigate('/');
+      }, 1000);
+    }).catch(() => {
+      openPopup('Что-то пошло не так. Пожалуйста, попробуйте позже.');
     });
   };
 

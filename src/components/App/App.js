@@ -90,7 +90,7 @@ function InnerApp() {
             <Route path='/' element={<Main />} />
             <Route path='/signin' element={<Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
             <Route path='/signup' element={<Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
-            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, user: currentUser, openPopup })} />
+            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, user: currentUser, openPopup, closePopup })} />
             <Route path='/movies' element={withProtectedRoute(Movies)({ loggedIn, user: currentUser, openPopup })} />
             <Route path='/saved-movies' element={withProtectedRoute(SavedMovies)({ loggedIn, user: currentUser, openPopup })} />
             <Route path='/error' element={<ErrorBanner />} />
