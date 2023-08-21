@@ -1,8 +1,9 @@
 import './App.css';
 import React, { useState, useEffect, useCallback } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { getUser, register, login } from '../../utils/MainApi';
+import { signout } from '../../utils/MainApi';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
@@ -21,6 +22,7 @@ function InnerApp() {
   const { pathname } = useLocation();
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [popupTitle, setPopupTitle] = useState('');
+  const navigate = useNavigate();
 
   // Обработчик регистрации пользователя
   const handleRegister = (email, password, name) => {
@@ -67,6 +69,25 @@ function InnerApp() {
     getUserInfo();
   }, []);
 
+  //Выход пользователя
+  const handleSignOut = () => {
+    localStorage.removeItem('moviesTumbler');
+    localStorage.removeItem('movies');
+    localStorage.removeItem('moviesInputSearch');
+    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+    signout().then(() => {
+      setLoggedIn(false);
+      openPopup('Выход из аккаунта выполнен');
+      setTimeout(() => {
+        closePopup();
+        navigate('/');
+      }, 1000);
+    }).catch(() => {
+      openPopup('Что-то пошло не так. Пожалуйста, попробуйте позже.');
+    });
+  };
+
   // Открыть модальное окно с ошибкой
   const openPopup = useCallback((textError) => {
     setPopupTitle(textError);
@@ -83,14 +104,14 @@ function InnerApp() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className='App'>
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
-          <Header loggedIn={loggedIn} key={loggedIn} /> : ''}
+          <Header loggedIn={loggedIn} /> : ''}
 
         <main>
           <Routes>
             <Route path='/' element={<Main />} />
             <Route path='/signin' element={<Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
             <Route path='/signup' element={<Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
-            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, user: currentUser, openPopup, closePopup })} />
+            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, user: currentUser, openPopup, closePopup, onSignOut: handleSignOut })} />
             <Route path='/movies' element={withProtectedRoute(Movies)({ loggedIn, user: currentUser, openPopup })} />
             <Route path='/saved-movies' element={withProtectedRoute(SavedMovies)({ loggedIn, user: currentUser, openPopup })} />
             <Route path='/error' element={<ErrorBanner />} />

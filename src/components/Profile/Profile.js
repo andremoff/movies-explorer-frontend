@@ -1,13 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Profile.css';
-import { useNavigate } from 'react-router-dom';
-import { getUser, updateUser, signout } from '../../utils/MainApi';
+import { getUser, updateUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-const Profile = ({ openPopup, closePopup }) => {
-
-  // Навигация для переходов между страницами
-  const navigate = useNavigate();
+const Profile = ({ openPopup, onSignOut }) => {
 
   // Стейты и функции для работы с формой (валидация, значения, ошибки и т.д.)
   const {
@@ -86,24 +82,6 @@ const Profile = ({ openPopup, closePopup }) => {
     });
   };
 
-  // Выход из профиля и переход на страницу входа
-  const handleSignOut = () => {
-    localStorage.removeItem('moviesTumbler');
-    localStorage.removeItem('movies');
-    localStorage.removeItem('moviesInputSearch');
-    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-    signout().then(() => {
-      openPopup('Выход из аккаунта выполнен');
-      setTimeout(() => {
-        closePopup();
-        navigate('/');
-      }, 1000);
-    }).catch(() => {
-      openPopup('Что-то пошло не так. Пожалуйста, попробуйте позже.');
-    });
-  };
-
   return (
     <section className="profile">
       <form className="profile__form">
@@ -142,7 +120,7 @@ const Profile = ({ openPopup, closePopup }) => {
           <div className="profile__btns">
             {errors.updateProfile && <p className="profile__error profile__error_active">{errors.updateProfile}</p>}
             <button onClick={handleEditButtonClick} className="profile__btn-edit">Редактировать</button>
-            <button className="profile__btn-escape" type="button" onClick={handleSignOut}>Выйти из аккаунта</button>
+            <button className="profile__btn-escape" type="button" onClick={onSignOut}>Выйти из аккаунта</button>
           </div>
         )}
       </form>
