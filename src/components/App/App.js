@@ -62,7 +62,9 @@ function InnerApp() {
         setCurrentUser(res);
         setLoggedIn(true);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        // Для возможной обработки ошибки
+      })
       .finally(() => {
         setLoading(false);
       });
