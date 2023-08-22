@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
 import { getUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 const Profile = ({ openPopup, onSignOut }) => {
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const {
     values,
@@ -16,30 +18,26 @@ const Profile = ({ openPopup, onSignOut }) => {
   } = useFormWithValidation();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Обновление данных текущего пользователя при изменении пропса user
   useEffect(() => {
+    // Запрос выполняется только при монтировании компонента
     getUser()
-        .then((res) => {
-            setCurrentUser({
-                name: res.data.name,
-                email: res.data.email
-            });
-        })
-        .catch((error) => {
-            // Обработайте ошибку
-            openPopup('Ошибка при загрузке данных профиля.');
+      .then((res) => {
+        setCurrentUser({
+          name: res.data.name,
+          email: res.data.email
         });
-}, [openPopup]);
+      })
+      .catch((error) => {
+        openPopup('Ошибка при загрузке данных профиля.');
+      });
+  }, [openPopup, setCurrentUser]);
 
-  // Проверка, изменились ли данные формы
   const hasDataChanged = () => {
     return values.name !== currentUser.name || values.email !== currentUser.email;
   };
 
-  // Обработчик кнопки редактирования профиля
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
     setValues({
@@ -49,14 +47,13 @@ const Profile = ({ openPopup, onSignOut }) => {
     setIsEditing(true);
   };
 
-  // Обработчик кнопки сохранения изменений профиля
   const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
 
     if (!isValid || !hasDataChanged()) return;
 
     setIsSubmitting(true);
-    // Обновление профиля через API
+
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
         setCurrentUser({
