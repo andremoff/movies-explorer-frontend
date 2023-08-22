@@ -60,7 +60,7 @@ function InnerApp() {
   const getUserInfo = () => {
     getUser()
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
         setLoggedIn(true);
       })
       .catch((err) => {
