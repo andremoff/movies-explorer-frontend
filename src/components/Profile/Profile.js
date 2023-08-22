@@ -6,26 +6,14 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const Profile = ({ openPopup, onSignOut }) => {
   const { currentUser, updateCurrentUser } = useContext(CurrentUserContext);
+  const [name, setName] = useState(currentUser.name);
+  const [email, setEmail] = useState(currentUser.email);
 
-  const [userData, setUserData] = useState({
-    name: currentUser.data.name,
-    email: currentUser.data.email
-  });
-
+  // Отслеживайте изменения currentUser и обновляйте локальное состояние
   useEffect(() => {
-    setUserData({
-      name: currentUser.data.name,
-      email: currentUser.data.email
-    });
+    setName(currentUser.name);
+    setEmail(currentUser.email);
   }, [currentUser]);
-
-  useEffect(() => {
-    // Инициализация начальных значений формы данными из контекста
-    setValues({
-      name: currentUser.data.name,
-      email: currentUser.data.email
-    });
-  }, []);
 
   const {
     values,
@@ -39,43 +27,45 @@ const Profile = ({ openPopup, onSignOut }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Проверка на изменение данных
   const hasDataChanged = () => {
-    const { name, email } = values;
-    return name !== userData.name || email !== userData.email;
+    return values.name !== name || values.email !== email;
   };
 
+  // Обработчик для кнопки редактирования
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
     setValues({
-      name: currentUser.data.name,
-      email: currentUser.data.email
+      name: currentUser.name,
+      email: currentUser.email
     });
     setIsEditing(true);
   };
 
+  // Обработчик для кнопки редактирования
   const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
 
     if (!isValid || !hasDataChanged()) return;
 
     setIsSubmitting(true);
-
+    // Отправка обновленных данных пользователя
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
-        updateCurrentUser(updatedUserData.data);
-        setUserData(updatedUserData.data);
+        updateCurrentUser(updatedUserData.data); 
+        setName(updatedUserData.data.name);
+        setEmail(updatedUserData.data.email);
         setIsEditing(false);
         openPopup('Данные успешно обновлены!');
       })
       .catch((error) => {
-        let errorMessage = 'При обновлении профиля произошла ошибка.';
         if (error.message === 'Conflict') {
-          errorMessage = 'Пользователь с таким email уже существует.';
-          handleServerError('email', errorMessage);
+          handleServerError('email', 'Пользователь с таким email уже существует.');
+          openPopup('Пользователь с таким email уже существует.');
         } else {
-          handleServerError('updateProfile', errorMessage);
+          handleServerError('updateProfile', 'При обновлении профиля произошла ошибка.');
+          openPopup('При обновлении профиля произошла ошибка.');
         }
-        openPopup(errorMessage);
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -86,14 +76,14 @@ const Profile = ({ openPopup, onSignOut }) => {
     <section className="profile">
       <form className="profile__form">
         <div className="profile__info">
-          <h2 className="profile__title">Привет, {userData.name}!</h2>
+          <h2 className="profile__title">Привет, {name}!</h2>
           <div className="profile__input-name">
             <p className="profile__name">Имя</p>
             <input className="profile__input"
               type="text"
               placeholder="Введите имя"
               name="name"
-              value={isEditing ? values.name || '' : userData.name}
+              value={isEditing ? values.name || '' : name}
               onChange={handleChange}
               disabled={!isEditing || isSubmitting}
               required />
@@ -105,7 +95,7 @@ const Profile = ({ openPopup, onSignOut }) => {
               type="email"
               placeholder="Введите Email"
               name="email"
-              value={isEditing ? values.email || '' : userData.email}
+              value={isEditing ? values.email || '' : email}
               onChange={handleChange}
               disabled={!isEditing || isSubmitting}
               required />
