@@ -52,8 +52,7 @@ const Profile = ({ openPopup, onSignOut }) => {
     // Отправка обновленных данных пользователя
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
-        console.log("Updated user data:", updatedUserData.data);
-        updateCurrentUser(updatedUserData.data); 
+        updateCurrentUser(updatedUserData.data);
         setName(updatedUserData.data.name);
         setEmail(updatedUserData.data.email);
         setIsEditing(false);

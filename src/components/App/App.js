@@ -51,9 +51,9 @@ function InnerApp() {
     return login(email, password)
       .then((res) => {
         if (res) {
-          console.log("Logged in with data:", res);
           setLoggedIn(true);
           setCurrentUser(res);
+          getUserInfo();
           return res;
         }
       });
@@ -63,12 +63,11 @@ function InnerApp() {
   const getUserInfo = () => {
     getUser()
       .then((res) => {
-        console.log("Fetched user data:", res.data);
         setCurrentUser(res.data);
         setLoggedIn(true);
       })
       .catch((err) => {
-        console.log("Error fetching user data:", err);
+        // Для возможной обработки ошибки
       })
       .finally(() => {
         setLoading(false);
