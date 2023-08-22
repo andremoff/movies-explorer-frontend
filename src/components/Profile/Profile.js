@@ -5,7 +5,7 @@ import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const Profile = ({ openPopup, onSignOut }) => {
-  const currentUser = useContext(CurrentUserContext);
+  const { currentUser, updateCurrentUser } = useContext(CurrentUserContext);
   const [name, setName] = useState(currentUser.name);
   const [email, setEmail] = useState(currentUser.email);
 
@@ -32,7 +32,6 @@ const Profile = ({ openPopup, onSignOut }) => {
     return values.name !== name || values.email !== email;
   };
 
-  // Обработчик для кнопки редактирования
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
     setValues({
@@ -42,18 +41,20 @@ const Profile = ({ openPopup, onSignOut }) => {
     setIsEditing(true);
   };
 
-  // Обработчик для кнопки редактирования
   const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
 
     if (!isValid || !hasDataChanged()) return;
 
     setIsSubmitting(true);
-    // Отправка обновленных данных пользователя
+
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
-        setName(updatedUserData.data.name);
-        setEmail(updatedUserData.data.email);
+        // Используйте updateCurrentUser для обновления глобального состояния
+        updateCurrentUser({
+          name: updatedUserData.data.name,
+          email: updatedUserData.data.email
+        });
         setIsEditing(false);
         openPopup('Данные успешно обновлены!');
       })

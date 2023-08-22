@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { CurrentUserProvider } from '../contexts/CurrentUserContext';
 import { getUser, register, login } from '../../utils/MainApi';
 import { signout } from '../../utils/MainApi';
 import Header from '../Header/Header';
@@ -112,7 +112,7 @@ function InnerApp() {
   }
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
+    <CurrentUserProvider>
       <div className='App'>
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
           <Header loggedIn={loggedIn} /> : ''}
@@ -135,7 +135,7 @@ function InnerApp() {
 
         <Popup text={popupTitle} isOpen={isOpenPopup} onClose={closePopup} />
       </div>
-    </CurrentUserContext.Provider>
+    </CurrentUserProvider>
   );
 }
 
