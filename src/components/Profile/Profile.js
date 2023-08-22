@@ -3,9 +3,10 @@ import { useLocation } from 'react-router-dom';
 import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 const Profile = ({ openPopup, onSignOut }) => {
-
+  const currentUserFromContext = React.useContext(CurrentUserContext);
   const {
     values,
     handleChange,
@@ -16,7 +17,7 @@ const Profile = ({ openPopup, onSignOut }) => {
   } = useFormWithValidation();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
+  const [currentUser, setCurrentUser] = useState(currentUserFromContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const location = useLocation();
 
