@@ -14,6 +14,7 @@ import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import ErrorBanner from '../ErrorBanner/ErrorBanner';
 import Popup from '../Popup/Popup';
+import Preloader from '../Preloader/Preloader';
 import { withProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 
 function InnerApp() {
@@ -106,24 +107,25 @@ function InnerApp() {
     setPopupTitle('');
   };
 
-  useEffect(() => {
+  const isAuthPage = () => {
     if (loggedIn && (pathname === '/signin' || pathname === '/signup')) {
-      navigate('/');
+      navigate('/movies');
+      return true;
     }
-  }, [loggedIn, pathname, navigate]);
-
+    return false;
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='App'>
-        {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
-          <Header loggedIn={loggedIn} /> : ''}
+        {(!isAuthPage() && (pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile')) ?
+          <Header loggedIn={loggedIn} /> : null}
 
         <main>
           <Routes>
             <Route path='/' element={<Main />} />
-            <Route path='/signin' element={<Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
-            <Route path='/signup' element={<Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
+            <Route path='/signin' element={loggedIn ? <Preloader /> : <Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
+            <Route path='/signup' element={loggedIn ? <Preloader /> : <Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
             <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, loading, user: currentUser, openPopup, closePopup, onSignOut: handleSignOut })} />
             <Route path='/movies' element={withProtectedRoute(Movies)({ loggedIn, loading, user: currentUser, openPopup })} />
             <Route path='/saved-movies' element={withProtectedRoute(SavedMovies)({ loggedIn, loading, user: currentUser, openPopup })} />
@@ -133,14 +135,14 @@ function InnerApp() {
           </Routes>
         </main>
 
-        {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' ? <Footer /> : ''}
+        {(!isAuthPage() && (pathname === '/' || pathname === '/movies' || pathname === '/saved-movies')) ? <Footer /> : null}
 
         <Popup text={popupTitle} isOpen={isOpenPopup} onClose={closePopup} />
       </div>
 
     </CurrentUserContext.Provider>
   );
-};
+}
 
 function App() {
   return (

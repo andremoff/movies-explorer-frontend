@@ -7,6 +7,21 @@
 .savedmovies__text-error {
   display: flex;
   align-items: center;
+  margin: 0;
+  justify-content: center;
+  color: #000;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  background-color: #fafafa;
+}
+
+.savedmovies__text-noresults {
+  display: flex;
+  align-items: center;
+  margin: 0;
   justify-content: center;
   color: #000;
   font-family: Inter, Arial, sans-serif;
