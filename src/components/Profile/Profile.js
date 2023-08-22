@@ -19,6 +19,14 @@ const Profile = ({ openPopup, onSignOut }) => {
     });
   }, [currentUser]);
 
+  useEffect(() => {
+    // Инициализация начальных значений формы данными из контекста
+    setValues({
+      name: currentUser.name,
+      email: currentUser.email
+    });
+  }, []);
+
   const {
     values,
     handleChange,
