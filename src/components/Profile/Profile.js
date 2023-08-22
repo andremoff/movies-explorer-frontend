@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-const Profile = ({ openPopup, onSignOut, user }) => {
+const Profile = ({ openPopup, onSignOut }) => {
 
   const {
     values,
@@ -17,14 +18,17 @@ const Profile = ({ openPopup, onSignOut, user }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const location = useLocation();
 
   // Обновление данных текущего пользователя при изменении пропса user
   useEffect(() => {
-    setCurrentUser({
-      name: user.name,
-      email: user.email
-    });
-  }, [user]);
+    if (location.pathname === '/profile') {
+      setValues({
+        name: currentUser.name,
+        email: currentUser.email
+      });
+    }
+  }, [location, currentUser, setValues]);
 
   // Проверка, изменились ли данные формы
   const hasDataChanged = () => {
