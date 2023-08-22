@@ -23,7 +23,9 @@ function InnerApp() {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [popupTitle, setPopupTitle] = useState('');
   const [loading, setLoading] = useState(true);
-  const updateCurrentUser = (userData) => { setCurrentUser(userData); };
+  const updateCurrentUser = (userData) => {
+    setCurrentUser(prevUser => ({ ...prevUser, ...userData }));
+  };
   const navigate = useNavigate();
 
   // Обработчик регистрации пользователя
