@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
+import { getUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-const Profile = ({ openPopup, onSignOut, user }) => {
+const Profile = ({ openPopup, onSignOut }) => {
 
   const {
     values,
@@ -18,13 +19,20 @@ const Profile = ({ openPopup, onSignOut, user }) => {
   const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
- // Обновление данных текущего пользователя при изменении пропса user
+  // Обновление данных текущего пользователя при изменении пропса user
   useEffect(() => {
-    setCurrentUser({
-      name: user.name,
-      email: user.email
-    });
-  }, [user]);
+    getUser()
+        .then((res) => {
+            setCurrentUser({
+                name: res.data.name,
+                email: res.data.email
+            });
+        })
+        .catch((error) => {
+            // Обработайте ошибку
+            openPopup('Ошибка при загрузке данных профиля.');
+        });
+}, [openPopup]);
 
   // Проверка, изменились ли данные формы
   const hasDataChanged = () => {
@@ -48,7 +56,7 @@ const Profile = ({ openPopup, onSignOut, user }) => {
     if (!isValid || !hasDataChanged()) return;
 
     setIsSubmitting(true);
-// Обновление профиля через API
+    // Обновление профиля через API
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
         setCurrentUser({

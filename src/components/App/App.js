@@ -107,26 +107,19 @@ function InnerApp() {
     setPopupTitle('');
   };
 
-  const isAuthPage = () => {
-    if (loggedIn && (pathname === '/signin' || pathname === '/signup')) {
-      navigate('/movies');
-      return true;
-    }
-    return false;
-  };
+  const isAuthPage = loggedIn && (pathname === '/signin' || pathname === '/signup');
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='App'>
-        {(!isAuthPage() && (pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile')) ?
-          <Header loggedIn={loggedIn} /> : null}
+        {!isAuthPage ? <Header loggedIn={loggedIn} /> : null}
 
         <main>
           <Routes>
             <Route path='/' element={<Main />} />
             <Route path='/signin' element={loggedIn ? <Preloader /> : <Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
             <Route path='/signup' element={loggedIn ? <Preloader /> : <Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
-            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, loading, user: currentUser, openPopup, closePopup, onSignOut: handleSignOut })} />
+            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, loading, openPopup, closePopup, onSignOut: handleSignOut })} />
             <Route path='/movies' element={withProtectedRoute(Movies)({ loggedIn, loading, user: currentUser, openPopup })} />
             <Route path='/saved-movies' element={withProtectedRoute(SavedMovies)({ loggedIn, loading, user: currentUser, openPopup })} />
 
@@ -135,11 +128,10 @@ function InnerApp() {
           </Routes>
         </main>
 
-        {(!isAuthPage() && (pathname === '/' || pathname === '/movies' || pathname === '/saved-movies')) ? <Footer /> : null}
+        {(!isAuthPage && (pathname === '/' || pathname === '/movies' || pathname === '/saved-movies')) ? <Footer /> : null}
 
         <Popup text={popupTitle} isOpen={isOpenPopup} onClose={closePopup} />
       </div>
-
     </CurrentUserContext.Provider>
   );
 }
