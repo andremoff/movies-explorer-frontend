@@ -14,7 +14,6 @@ import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import ErrorBanner from '../ErrorBanner/ErrorBanner';
 import Popup from '../Popup/Popup';
-import Preloader from '../Preloader/Preloader';
 import { withProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 
 function InnerApp() {
@@ -107,19 +106,22 @@ function InnerApp() {
     setPopupTitle('');
   };
 
-  const isAuthPage = loggedIn && (pathname === '/signin' || pathname === '/signup');
+  // Переадресация
+  if (loggedIn && (pathname === '/signin' || pathname === '/signup')) {
+    navigate('/movies', { replace: true });
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='App'>
-      {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
+        {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
           <Header loggedIn={loggedIn} /> : ''}
 
         <main>
           <Routes>
             <Route path='/' element={<Main />} />
-            <Route path='/signin' element={loggedIn ? <Preloader /> : <Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
-            <Route path='/signup' element={loggedIn ? <Preloader /> : <Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
+            <Route path='/signin' element={loggedIn ? null : <Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
+            <Route path='/signup' element={loggedIn ? null : <Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
             <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, loading, openPopup, closePopup, onSignOut: handleSignOut })} />
             <Route path='/movies' element={withProtectedRoute(Movies)({ loggedIn, loading, user: currentUser, openPopup })} />
             <Route path='/saved-movies' element={withProtectedRoute(SavedMovies)({ loggedIn, loading, user: currentUser, openPopup })} />
@@ -129,7 +131,7 @@ function InnerApp() {
           </Routes>
         </main>
 
-        {(!isAuthPage && (pathname === '/' || pathname === '/movies' || pathname === '/saved-movies')) ? <Footer /> : null}
+        {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' ? <Footer /> : ''}
 
         <Popup text={popupTitle} isOpen={isOpenPopup} onClose={closePopup} />
       </div>
