@@ -8,22 +8,22 @@ const Profile = ({ openPopup, onSignOut }) => {
   const { currentUser, updateCurrentUser } = useContext(CurrentUserContext);
 
   const [userData, setUserData] = useState({
-    name: currentUser.name,
-    email: currentUser.email
+    name: currentUser.data.name,
+    email: currentUser.data.email
   });
 
   useEffect(() => {
     setUserData({
-      name: currentUser.name,
-      email: currentUser.email
+      name: currentUser.data.name,
+      email: currentUser.data.email
     });
   }, [currentUser]);
 
   useEffect(() => {
     // Инициализация начальных значений формы данными из контекста
     setValues({
-      name: currentUser.name,
-      email: currentUser.email
+      name: currentUser.data.name,
+      email: currentUser.data.email
     });
   }, []);
 
@@ -47,8 +47,8 @@ const Profile = ({ openPopup, onSignOut }) => {
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
     setValues({
-      name: currentUser.name,
-      email: currentUser.email
+      name: currentUser.data.name,
+      email: currentUser.data.email
     });
     setIsEditing(true);
   };
