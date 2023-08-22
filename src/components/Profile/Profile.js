@@ -3,7 +3,7 @@ import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
 import { getUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const Profile = ({ openPopup, onSignOut }) => {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
