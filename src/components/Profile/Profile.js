@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-const Profile = ({ openPopup, onSignOut }) => {
-  const currentUserFromContext = React.useContext(CurrentUserContext);
+const Profile = ({ openPopup, onSignOut, user }) => {
+
   const {
     values,
     handleChange,
@@ -17,19 +15,16 @@ const Profile = ({ openPopup, onSignOut }) => {
   } = useFormWithValidation();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [currentUser, setCurrentUser] = useState(currentUserFromContext);
+  const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const location = useLocation();
 
-  // Обновление данных текущего пользователя при изменении пропса user
+ // Обновление данных текущего пользователя при изменении пропса user
   useEffect(() => {
-    if (location.pathname === '/profile') {
-      setValues({
-        name: currentUser.name,
-        email: currentUser.email
-      });
-    }
-  }, [location, currentUser, setValues]);
+    setCurrentUser({
+      name: user.name,
+      email: user.email
+    });
+  }, [user]);
 
   // Проверка, изменились ли данные формы
   const hasDataChanged = () => {
@@ -53,8 +48,7 @@ const Profile = ({ openPopup, onSignOut }) => {
     if (!isValid || !hasDataChanged()) return;
 
     setIsSubmitting(true);
-
-    // Обновление профиля через API
+// Обновление профиля через API
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
         setCurrentUser({
