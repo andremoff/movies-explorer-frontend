@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { CurrentUserProvider } from '../contexts/CurrentUserContext';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { getUser, register, login } from '../../utils/MainApi';
 import { signout } from '../../utils/MainApi';
 import Header from '../Header/Header';
@@ -23,6 +23,7 @@ function InnerApp() {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [popupTitle, setPopupTitle] = useState('');
   const [loading, setLoading] = useState(true);
+  const updateCurrentUser = (userData) => { setCurrentUser(userData); };
   const navigate = useNavigate();
 
   // Обработчик регистрации пользователя
@@ -112,7 +113,7 @@ function InnerApp() {
   }
 
   return (
-    <CurrentUserProvider>
+    <CurrentUserContext.Provider value={{ currentUser, updateCurrentUser }}>
       <div className='App'>
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
           <Header loggedIn={loggedIn} /> : ''}
@@ -135,7 +136,7 @@ function InnerApp() {
 
         <Popup text={popupTitle} isOpen={isOpenPopup} onClose={closePopup} />
       </div>
-    </CurrentUserProvider>
+    </CurrentUserContext.Provider>
   );
 }
 
