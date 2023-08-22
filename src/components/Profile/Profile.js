@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
-import { getUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const Profile = ({ openPopup, onSignOut }) => {
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const currentUser = useContext(CurrentUserContext);
+  const [name, setName] = useState(currentUser.name);
+  const [email, setEmail] = useState(currentUser.email);
 
   const {
     values,
@@ -20,22 +21,8 @@ const Profile = ({ openPopup, onSignOut }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    // Запрос выполняется только при монтировании компонента
-    getUser()
-      .then((res) => {
-        setCurrentUser({
-          name: res.data.name,
-          email: res.data.email
-        });
-      })
-      .catch((error) => {
-        openPopup('Ошибка при загрузке данных профиля.');
-      });
-  }, [openPopup, setCurrentUser]);
-
   const hasDataChanged = () => {
-    return values.name !== currentUser.name || values.email !== currentUser.email;
+    return values.name !== name || values.email !== email;
   };
 
   const handleEditButtonClick = (evt) => {
@@ -56,10 +43,8 @@ const Profile = ({ openPopup, onSignOut }) => {
 
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
-        setCurrentUser({
-          name: updatedUserData.data.name,
-          email: updatedUserData.data.email
-        });
+        setName(updatedUserData.data.name);
+        setEmail(updatedUserData.data.email);
         setIsEditing(false);
         openPopup('Данные успешно обновлены!');
       })
@@ -81,14 +66,14 @@ const Profile = ({ openPopup, onSignOut }) => {
     <section className="profile">
       <form className="profile__form">
         <div className="profile__info">
-          <h2 className="profile__title">Привет, {currentUser.name}!</h2>
+          <h2 className="profile__title">Привет, {name}!</h2>
           <div className="profile__input-name">
             <p className="profile__name">Имя</p>
             <input className="profile__input"
               type="text"
               placeholder="Введите имя"
               name="name"
-              value={isEditing ? values.name || '' : currentUser.name}
+              value={isEditing ? values.name || '' : name}
               onChange={handleChange}
               disabled={!isEditing || isSubmitting}
               required />
@@ -100,7 +85,7 @@ const Profile = ({ openPopup, onSignOut }) => {
               type="email"
               placeholder="Введите Email"
               name="email"
-              value={isEditing ? values.email || '' : currentUser.email}
+              value={isEditing ? values.email || '' : email}
               onChange={handleChange}
               disabled={!isEditing || isSubmitting}
               required />
