@@ -52,7 +52,7 @@ function InnerApp() {
       .then((res) => {
         if (res) {
           setLoggedIn(true);
-          setCurrentUser(res.data);
+          setCurrentUser(res);
           return res;
         }
       });
