@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
@@ -8,6 +8,12 @@ const Profile = ({ openPopup, onSignOut }) => {
   const currentUser = useContext(CurrentUserContext);
   const [name, setName] = useState(currentUser.name);
   const [email, setEmail] = useState(currentUser.email);
+
+  // Отслеживайте изменения currentUser и обновляйте локальное состояние
+  useEffect(() => {
+    setName(currentUser.name);
+    setEmail(currentUser.email);
+  }, [currentUser]);
 
   const {
     values,
@@ -21,10 +27,12 @@ const Profile = ({ openPopup, onSignOut }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Проверка на изменение данных
   const hasDataChanged = () => {
     return values.name !== name || values.email !== email;
   };
 
+  // Обработчик для кнопки редактирования
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
     setValues({
@@ -34,13 +42,14 @@ const Profile = ({ openPopup, onSignOut }) => {
     setIsEditing(true);
   };
 
+  // Обработчик для кнопки редактирования
   const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
 
     if (!isValid || !hasDataChanged()) return;
 
     setIsSubmitting(true);
-
+    // Отправка обновленных данных пользователя
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
         setName(updatedUserData.data.name);
