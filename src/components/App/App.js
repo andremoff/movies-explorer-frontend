@@ -112,7 +112,8 @@ function InnerApp() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='App'>
-        {!isAuthPage ? <Header loggedIn={loggedIn} /> : null}
+      {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
+          <Header loggedIn={loggedIn} /> : ''}
 
         <main>
           <Routes>
