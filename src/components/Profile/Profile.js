@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { updateUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-const Profile = ({ openPopup, onSignOut }) => {
+const Profile = ({ openPopup, onSignOut, user }) => {
 
   const {
     values,
@@ -16,6 +16,13 @@ const Profile = ({ openPopup, onSignOut }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setCurrentUser({
+      name: user.name,
+      email: user.email
+    });
+  }, [user]);
 
   const hasDataChanged = () => {
     return values.name !== currentUser.name || values.email !== currentUser.email;
