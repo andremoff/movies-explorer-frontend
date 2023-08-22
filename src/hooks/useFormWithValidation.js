@@ -90,5 +90,5 @@ export function useFormWithValidation() {
     [setValues, setErrors, setIsValid]
   );
 
-  return { values, handleChange, errors, isValid, resetForm, handleServerError };
+  return { values, handleChange, errors, isValid, resetForm, handleServerError, setValues };
 }

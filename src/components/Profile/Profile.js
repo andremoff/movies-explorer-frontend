@@ -10,13 +10,15 @@ const Profile = ({ openPopup, onSignOut, user }) => {
     handleChange,
     errors,
     isValid,
-    handleServerError
+    handleServerError,
+    setValues
   } = useFormWithValidation();
 
   const [isEditing, setIsEditing] = useState(false);
   const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Обновление данных текущего пользователя при изменении пропса user
   useEffect(() => {
     setCurrentUser({
       name: user.name,
@@ -24,15 +26,22 @@ const Profile = ({ openPopup, onSignOut, user }) => {
     });
   }, [user]);
 
+  // Проверка, изменились ли данные формы
   const hasDataChanged = () => {
     return values.name !== currentUser.name || values.email !== currentUser.email;
   };
 
+  // Обработчик кнопки редактирования профиля
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
+    setValues({
+      name: currentUser.name,
+      email: currentUser.email
+    });
     setIsEditing(true);
   };
 
+  // Обработчик кнопки сохранения изменений профиля
   const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
 
@@ -40,6 +49,7 @@ const Profile = ({ openPopup, onSignOut, user }) => {
 
     setIsSubmitting(true);
 
+    // Обновление профиля через API
     updateUser(values.email, values.name)
       .then((updatedUserData) => {
         setCurrentUser({
