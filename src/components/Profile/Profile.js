@@ -1,85 +1,59 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './Profile.css';
-import { getUser, updateUser } from '../../utils/MainApi';
+import { updateUser } from '../../utils/MainApi';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
 const Profile = ({ openPopup, onSignOut }) => {
 
-  // Стейты и функции для работы с формой (валидация, значения, ошибки и т.д.)
   const {
     values,
     handleChange,
     errors,
     isValid,
-    resetForm,
     handleServerError
   } = useFormWithValidation();
 
   const [isEditing, setIsEditing] = useState(false);
   const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
-  const prevUserData = useRef({ name: '', email: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Получение данных пользователя при монтировании компонента
-  useEffect(() => {
-    getUser().then((userData) => {
-      // Проверка изменились ли данные пользователя
-      const isUserDataChanged = !prevUserData.current ||
-        prevUserData.current.name !== userData.data.name ||
-        prevUserData.current.email !== userData.data.email;
+  const hasDataChanged = () => {
+    return values.name !== currentUser.name || values.email !== currentUser.email;
+  };
 
-      if (isUserDataChanged) {
-        setCurrentUser({
-          name: userData.data.name,
-          email: userData.data.email
-        });
-        resetForm({
-          name: userData.data.name,
-          email: userData.data.email
-        }, {}, true);
-
-        prevUserData.current = {
-          name: userData.data.name,
-          email: userData.data.email
-        };
-      }
-
-    }).catch(() => {
-      handleServerError('updateProfile', 'При обновлении профиля произошла ошибка.');
-    });
-  }, [resetForm, handleServerError]);
-
-  // Активация режима редактирования
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
     setIsEditing(true);
   };
 
-  // Сохранение изменений профиля
   const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
 
-    if (!isValid) return;
+    if (!isValid || !hasDataChanged()) return;
 
-    updateUser(values.email, values.name).then((updatedUserData) => {
-      setCurrentUser({
-        name: updatedUserData.data.name,
-        email: updatedUserData.data.email
+    setIsSubmitting(true);
+
+    updateUser(values.email, values.name)
+      .then((updatedUserData) => {
+        setCurrentUser({
+          name: updatedUserData.data.name,
+          email: updatedUserData.data.email
+        });
+        setIsEditing(false);
+        openPopup('Данные успешно обновлены!');
+      })
+      .catch((error) => {
+        if (error.message === 'Conflict') {
+          handleServerError('email', 'Пользователь с таким email уже существует.');
+          openPopup('Пользователь с таким email уже существует.');
+        } else {
+          handleServerError('updateProfile', 'При обновлении профиля произошла ошибка.');
+          openPopup('При обновлении профиля произошла ошибка.');
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
-      resetForm({
-        name: updatedUserData.data.name,
-        email: updatedUserData.data.email
-      }, {}, true);
-      setIsEditing(false);
-      openPopup('Данные успешно обновлены!');
-    }).catch((error) => {
-      if (error.message === 'Conflict') {
-        handleServerError('email', 'Пользователь с таким email уже существует.');
-        openPopup('Пользователь с таким email уже существует.');
-      } else {
-        handleServerError('updateProfile', 'При обновлении профиля произошла ошибка.');
-        openPopup('При обновлении профиля произошла ошибка.');
-      }
-    });
   };
 
   return (
@@ -95,7 +69,7 @@ const Profile = ({ openPopup, onSignOut }) => {
               name="name"
               value={isEditing ? values.name || '' : currentUser.name}
               onChange={handleChange}
-              disabled={!isEditing}
+              disabled={!isEditing || isSubmitting}
               required />
           </div>
           <p className="profile__error">{errors.name}</p>
@@ -107,20 +81,20 @@ const Profile = ({ openPopup, onSignOut }) => {
               name="email"
               value={isEditing ? values.email || '' : currentUser.email}
               onChange={handleChange}
-              disabled={!isEditing}
+              disabled={!isEditing || isSubmitting}
               required />
           </div>
           <p className="profile__error">{errors.email}</p>
         </div>
         {isEditing ? (
           <div className="profile__btns">
-            <button onClick={handleSaveButtonClick} className="profile__btn-save" type="submit" disabled={!isValid}>Сохранить</button>
+            <button onClick={handleSaveButtonClick} className="profile__btn-save" type="submit" disabled={!isValid || !hasDataChanged() || isSubmitting}>Сохранить</button>
           </div>
         ) : (
           <div className="profile__btns">
             {errors.updateProfile && <p className="profile__error profile__error_active">{errors.updateProfile}</p>}
-            <button onClick={handleEditButtonClick} className="profile__btn-edit">Редактировать</button>
-            <button className="profile__btn-escape" type="button" onClick={onSignOut}>Выйти из аккаунта</button>
+            <button onClick={handleEditButtonClick} className="profile__btn-edit" disabled={isSubmitting}>Редактировать</button>
+            <button className="profile__btn-escape" type="button" onClick={onSignOut} disabled={isSubmitting}>Выйти из аккаунта</button>
           </div>
         )}
       </form>

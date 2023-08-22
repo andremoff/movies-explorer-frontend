@@ -1,10 +1,15 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './ErrorBanner.css';
 
 const ErrorBanner = ({ customMessage }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const errorMessage = customMessage || queryParams.get('message') || 'Произошла неизвестная ошибка';
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   return (
     <div className="error-banner">
@@ -12,7 +17,7 @@ const ErrorBanner = ({ customMessage }) => {
         <h2 className="error-banner__code">404</h2>
         <p className="error-banner__text">{errorMessage}</p>
       </div>
-      <Link to="/" className="error-banner__back">Назад</Link>
+      <button onClick={handleBackClick} className="error-banner__back">Назад</button>
     </div>
   );
 };

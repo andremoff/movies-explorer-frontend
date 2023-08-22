@@ -106,6 +106,13 @@ function InnerApp() {
     setPopupTitle('');
   };
 
+  useEffect(() => {
+    if (loggedIn && (pathname === '/signin' || pathname === '/signup')) {
+      navigate('/');
+    }
+  }, [loggedIn, pathname, navigate]);
+
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='App'>

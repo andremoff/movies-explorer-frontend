@@ -81,13 +81,16 @@ const SavedMovies = ({ openPopup }) => {
       />
       {loading && <Preloader />}
       {errorText && <div className="savedmovies__text-error">{errorText}</div>}
-      {!loading && !errorText && (
+      {!loading && !errorText && filteredMovies.length > 0 && (
         <MoviesCardList
           movies={filteredMovies}
           isSavedMovies={true}
           toggleFavoriteStatus={handleDeleteMovie}
           moviesSaved={filteredMovies}
         />
+      )}
+      {!loading && !errorText && filteredMovies.length === 0 && (
+        <p className="savedmovies__text-noresults">Ничего не найдено</p>
       )}
     </section>
   );
