@@ -16,6 +16,7 @@ import ErrorBanner from '../ErrorBanner/ErrorBanner';
 import Popup from '../Popup/Popup';
 import { withProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 
+// часть с запросами к серверу в разработке
 function InnerApp() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -120,6 +121,7 @@ function InnerApp() {
       <div className='App'>
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
           <Header loggedIn={loggedIn} /> : ''}
+ level-3
 
         <main>
           <Routes>
@@ -135,6 +137,19 @@ function InnerApp() {
           </Routes>
         </main>
 
+
+        <main>
+          <Routes>
+            <Route path='/' element={<Main />} />
+            <Route path='/signin' element={<Login onLogin={handleLogin} />} />
+            <Route path='/signup' element={<Register onRegister={handleRegister} />} />
+            <Route path='/profile' element={<Profile loggedIn={loggedIn} user={currentUser} />} />
+            <Route path='/movies' element={<Movies />} />
+            <Route path='/saved-movies' element={<SavedMovies />} />
+            <Route path='*' element={<ErrorBanner />} />
+          </Routes>
+        </main>
+ main
         {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' ? <Footer /> : ''}
 
         <Popup text={popupTitle} isOpen={isOpenPopup} onClose={closePopup} />

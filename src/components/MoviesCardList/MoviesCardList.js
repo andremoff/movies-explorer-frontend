@@ -7,6 +7,7 @@ const MoviesCardList = ({ movies, toggleFavoriteStatus, moviesSaved, moviesRemai
 
   return (
     <section className="moviescard-list">
+ level-3
       {movies.length > 0 && (
         <ul className="moviescard-list__items">
           {movies.map((movie) => {
@@ -26,6 +27,16 @@ const MoviesCardList = ({ movies, toggleFavoriteStatus, moviesSaved, moviesRemai
       {moviesRemains && moviesRemains.length > 0 && pathname !== '/saved-movies' && (
         <div className="moviescard-list__btn-container">
           <button className="moviescard-list__btn-more" type="button" name="more" onClick={handleMore}>Ещё</button>
+
+      <ul className="moviescard-list__items">
+        {movies.slice(0, visibleMovies).map((movie) => (
+          <MoviesCard key={movie.id} movie={movie} />
+        ))}
+      </ul>
+      {visibleMovies < movies.length && (
+        <div className="moviescard-list__btn-container">
+          <button className="moviescard-list__btn-more" onClick={loadMoreMovies}>Ещё</button>
+ main
         </div>
       )}
     </section>

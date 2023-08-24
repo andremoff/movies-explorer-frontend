@@ -39,9 +39,13 @@ const Login = ({ onLogin, openPopup, closePopup }) => {
           </NavLink>
           <h2 className="login__title">Рады видеть!</h2>
           <p className="login__input-title">E-mail</p>
+ level-3
           <input
             name="email"
             className={`login__input ${errors.email && 'login__input_error'}`}
+
+          <input className={`login__input ${emailError && 'login__input_error'}`}
+ main
             type="email"
             placeholder="Введите E-mail"
             value={values.email || ""}
@@ -51,9 +55,13 @@ const Login = ({ onLogin, openPopup, closePopup }) => {
           <p className="login__error">{errors.email}</p>
 
           <p className="login__input-title">Пароль</p>
+ level-3
           <input
             name="password"
             className={`login__input ${errors.password && 'login__input_error'}`}
+
+          <input className={`login__input ${passwordError && 'login__input_error'}`}
+ main
             type="password"
             placeholder="Введите пароль"
             value={values.password || ""}

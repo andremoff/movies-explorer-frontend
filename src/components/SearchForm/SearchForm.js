@@ -35,6 +35,7 @@ const SearchForm = ({ handleFilterMovies, moviesTumbler, moviesInputSearch, hand
   }, [moviesTumbler, moviesInputSearch]);
 
   return (
+ level-3
     <form className="search" onSubmit={handleSubmit}>
       <div className="search__wrapper">
         <div className="search__field">
@@ -45,16 +46,26 @@ const SearchForm = ({ handleFilterMovies, moviesTumbler, moviesInputSearch, hand
             value={inputSearch}
             onChange={handleInputChange}
           />
+
+    <form className="search">
+      <div className="search__wrapper">
+        <div className="search__field">
+          <input className="search__input" type="text" placeholder="Фильм" required />
+ main
           <button className="search__btn" type="submit"></button>
         </div>
         <div className="search__handle">
           <label className="search__checkbox">
+ level-3
             <input
               className="search__tumbler"
               type="checkbox"
               checked={tumbler}
               onChange={handleTumblerChange}
             />
+
+            <input className="search__tumbler" type="checkbox" onChange={handleCheckboxChange} />
+ main
             <span className="search__indicator"></span>
           </label>
           <p className="search__handle-text">Короткометражки</p>

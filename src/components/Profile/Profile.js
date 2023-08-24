@@ -76,7 +76,11 @@ const Profile = ({ openPopup, onSignOut }) => {
     <section className="profile">
       <form className="profile__form">
         <div className="profile__info">
+ level-3
           <h2 className="profile__title">Привет, {name}!</h2>
+
+          <h2 className="profile__title">Привет, Виталий!</h2>
+ main
           <div className="profile__input-name">
             <p className="profile__name">Имя</p>
             <input className="profile__input"
@@ -88,7 +92,10 @@ const Profile = ({ openPopup, onSignOut }) => {
               disabled={!isEditing || isSubmitting}
               required />
           </div>
+ level-3
           <p className="profile__error">{errors.name}</p>
+
+ main
           <div className="profile__input-email">
             <p className="profile__email">E-mail</p>
             <input className="profile__input"
@@ -104,6 +111,7 @@ const Profile = ({ openPopup, onSignOut }) => {
         </div>
         {isEditing ? (
           <div className="profile__btns">
+ level-3
             <button onClick={handleSaveButtonClick} className="profile__btn-save" type="submit" disabled={!isValid || !hasDataChanged() || isSubmitting}>Сохранить</button>
           </div>
         ) : (
@@ -111,6 +119,15 @@ const Profile = ({ openPopup, onSignOut }) => {
             {errors.updateProfile && <p className="profile__error profile__error_active">{errors.updateProfile}</p>}
             <button onClick={handleEditButtonClick} className="profile__btn-edit" disabled={isSubmitting}>Редактировать</button>
             <button className="profile__btn-escape" type="button" onClick={onSignOut} disabled={isSubmitting}>Выйти из аккаунта</button>
+
+            <button onClick={handleSaveButtonClick} className="profile__btn-save" type="submit">Сохранить</button>
+          </div>
+        ) : (
+          <div className="profile__btns">
+            {errorMessage && <p className="profile__error">{errorMessage}</p>}
+            <button onClick={handleEditButtonClick} className="profile__btn-edit">Редактировать</button>
+            <button className="profile__btn-escape" type="button" onClick={handleSignOut}>Выйти из аккаунта</button>
+ main
           </div>
         )}
       </form>

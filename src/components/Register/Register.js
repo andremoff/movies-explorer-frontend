@@ -40,8 +40,12 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
 
           <p className="register__input-title">Имя</p>
           <input
+ level-3
             name="name"
             className={`register__input ${errors.name && 'register__input_error'}`}
+
+            className={`register__input ${nameError && 'register__input_error'}`}
+ main
             type="text"
             placeholder="Введите имя"
             value={values.name || ""}
@@ -52,8 +56,12 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
 
           <p className="register__input-title">E-mail</p>
           <input
+ level-3
             name="email"
             className={`register__input ${errors.email && 'register__input_error'}`}
+
+            className={`register__input ${emailError && 'register__input_error'}`}
+ main
             type="email"
             placeholder="Введите E-mail"
             value={values.email || ""}
@@ -64,12 +72,19 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
 
           <p className="register__input-title">Пароль</p>
           <input
+ level-3
             name="password"
             className={`register__input ${errors.password && 'register__input_error'}`}
             type="password"
             placeholder="Введите пароль"
             value={values.password || ""}
             onChange={handleChange}
+
+            className={`register__input ${passwordError && 'register__input_error'}`}
+            type="password" placeholder="Введите пароль"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+ main
             required>
           </input>
           <p className="register__error">{errors.password}</p>

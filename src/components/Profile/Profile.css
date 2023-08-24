@@ -115,11 +115,14 @@
   cursor: pointer;
 }
 
+ level-3
 .profile__btn-save[disabled] {
   background-color: #f8f8f8;
   cursor: not-allowed;
 }
 
+
+ main
 .profile__btn-edit {
   color: #000;
   font-size: 12px;
